@@ -1,0 +1,37 @@
+<!-- TODO: Replace brand copy -->
+---
+import Layout from '../layouts/Layout.astro';
+import PageTitle from '../sections/PageTitle.tsx';
+import JoinTeamForm from '../components/forms/JoinTeamForm.tsx'
+import { site } from '../config/site';
+
+const meta = {
+    title: "Join Our Team",
+    seo_title: `Join Our Team | Careers at ${site.name}`,
+    seo_description: `Join the ${site.name} team. If you're passionate about business brokerage, real estate, and serving clients with a unique hybrid agency/brokerage approach, we'd love to hear from you.`,
+    sub_title: "We offer expert representation in business sales, broker price opinions, and commercial real estate.",
+    seo_image: "/images/marketing/coronado-bridge.jpg",
+    url: `${site.url}/join-our-team`,
+    image: "/images/marketing/blue_tech_bg.webp",
+};
+
+---
+
+<Layout {...meta}>
+    <PageTitle title={meta.title} sub_title={meta.sub_title} image={meta.image}/>
+
+    <section class="container max-w-7xl py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div class="col-span-1">
+                <div class="space-y-4 text-lg">
+                    <h2>Are you looking for a change from the "typical" brokerage?</h2>
+                    <p>If you like to hustle, enjoy the deal process, want to feel like you belong to a team and have a passion for serving your clients, then you may have the Smith Allen mindset.</p>
+                    <p>Send us some initial details with the form so that we'll have a conversation starting point.</p>
+                </div>
+            </div>
+            <div class="col-span-2">
+                <JoinTeamForm client:load />
+            </div>
+        </div>
+    </section>
+</Layout>

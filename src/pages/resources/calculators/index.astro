@@ -1,0 +1,206 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import PageTitle from '../../../sections/PageTitle.tsx';
+import { Calculator, TrendingUp, DollarSign, Utensils, Users, Building2, PiggyBank, Receipt } from 'lucide-react';
+import { site } from '../../../config/site';
+
+const seoTitle = "Restaurant Calculators - Free Business Tools for Owners & Buyers";
+const seoDescription = "Free restaurant business calculators: valuation, SDE, SBA loans, food costs, and more. Essential tools for restaurant owners, buyers, and investors.";
+
+const calculators = [
+  {
+    title: "SDE Calculator",
+    description: "Calculate Seller's Discretionary Earnings and restaurant value with industry-standard multiples for owner-operated businesses.",
+    href: "/resources/calculators/sde-calculator",
+    icon: "DollarSign",
+    status: "live",
+  },
+  {
+    title: "EBITDA Calculator",
+    description: "Valuation calculator for larger restaurant operations with professional management in place.",
+    href: "/resources/calculators/ebitda-calculator",
+    icon: "TrendingUp",
+    status: "coming-soon",
+  },
+  {
+    title: "SBA Loan Calculator",
+    description: "Estimate monthly payments for SBA acquisition financing with current rates.",
+    href: "/resources/calculators/sba-loan",
+    icon: "PiggyBank",
+    status: "coming-soon",
+  },
+  {
+    title: "Food Cost Calculator",
+    description: "Calculate your food cost percentage per dish, compare to benchmarks by concept type, and get suggested pricing.",
+    href: "/resources/calculators/food-cost-calculator",
+    icon: "Utensils",
+    status: "live",
+  },
+  {
+    title: "Prime Cost Calculator",
+    description: "Analyze your combined food and labor costs - the key to restaurant profitability.",
+    href: "/resources/calculators/prime-cost",
+    icon: "Receipt",
+    status: "coming-soon",
+  },
+  {
+    title: "Break-Even Calculator",
+    description: "Determine how much revenue you need to cover your fixed and variable costs.",
+    href: "/resources/calculators/break-even",
+    icon: "Calculator",
+    status: "coming-soon",
+  },
+  {
+    title: "ROI Calculator",
+    description: "Calculate return on investment for restaurant acquisitions.",
+    href: "/resources/calculators/roi",
+    icon: "TrendingUp",
+    status: "coming-soon",
+  },
+  {
+    title: "Lease Rent-to-Sales Calculator",
+    description: "Analyze if your rent is healthy as a percentage of gross sales.",
+    href: "/resources/calculators/rent-to-sales",
+    icon: "Building2",
+    status: "coming-soon",
+  },
+];
+
+const iconMap: Record<string, any> = {
+  Calculator,
+  TrendingUp,
+  DollarSign,
+  Utensils,
+  Users,
+  Building2,
+  PiggyBank,
+  Receipt,
+};
+---
+
+<Layout
+  seo_title={seoTitle}
+  seo_description={seoDescription}
+  seo_image="/images/marketing/financial-performance.webp"
+  url={`${site.url}/resources/calculators`}
+>
+  <PageTitle
+    title="Restaurant Calculators"
+    sub_title="Free tools to help restaurant owners, buyers, and investors make informed decisions. From valuations to operational metrics."
+    image="/images/marketing/financial-performance.webp"
+    client:load
+  />
+
+  <section class="container max-w-7xl py-12 md:py-16">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {calculators.map((calc) => {
+        const Icon = iconMap[calc.icon];
+        const isLive = calc.status === "live";
+
+        return (
+          <a
+            href={isLive ? calc.href : undefined}
+            class:list={[
+              "group relative block p-6 bg-white rounded-xl border border-gray-100 shadow-xs transition-all hover:no-underline",
+              isLive ? "hover:shadow-sm cursor-pointer" : "opacity-75 cursor-not-allowed",
+            ]}
+          >
+            {!isLive && (
+              <span class="absolute top-4 right-4 text-xs font-medium text-amber-700 bg-amber-100 px-2 py-1 rounded-full">
+                Coming Soon
+              </span>
+            )}
+
+            <div class:list={[
+              "inline-flex p-3 rounded-lg mb-4",
+              isLive ? "bg-primary/10 text-primary" : "bg-gray-100 text-gray-400",
+            ]}>
+              <Icon className="w-6 h-6" />
+            </div>
+
+            <h3 class:list={[
+              "text-lg font-semibold mb-2",
+              isLive ? "text-gray-900 group-hover:text-primary transition-colors" : "text-gray-500",
+            ]}>
+              {calc.title}
+            </h3>
+
+            <p class="text-sm text-gray-600">
+              {calc.description}
+            </p>
+
+            {isLive && (
+              <span class="mt-4 inline-flex items-center text-sm font-medium text-primary">
+                Use Calculator
+                <svg class="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            )}
+          </a>
+        );
+      })}
+    </div>
+  </section>
+
+  <section class="bg-gray-50 border-t border-gray-200">
+    <div class="container max-w-7xl py-12 md:py-16">
+      <div class="">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4 mt-0">Why Use Our Calculators?</h2>
+        <p class="text-gray-600 mb-6">
+          Our calculators are built by experienced restaurant brokers who understand the industry inside and out. Whether you're thinking about selling your restaurant, buying a new concept, or just want to understand your business better, these tools give you the insights you need.
+        </p>
+
+        <div class="grid sm:grid-cols-2 gap-6">
+          <div class="flex gap-3">
+            <div class="shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+              <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900 mt-1">Industry-Standard Methods</h4>
+              <p class="text-sm text-gray-600">Based on the same methods used by professional appraisers and brokers.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <div class="shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+              <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900 mt-1">Restaurant-Specific</h4>
+              <p class="text-sm text-gray-600">Tailored for the unique aspects of restaurant businesses.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <div class="shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+              <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900 mt-1">Completely Free</h4>
+              <p class="text-sm text-gray-600">No sign-up required for basic results. No hidden fees.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <div class="shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+              <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900 mt-1">Instant Results</h4>
+              <p class="text-sm text-gray-600">Get answers immediately without waiting for a callback.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

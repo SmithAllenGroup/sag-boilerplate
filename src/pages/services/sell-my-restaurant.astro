@@ -1,0 +1,265 @@
+<!-- TODO: Replace brand copy -->
+---
+import Layout from '../../layouts/Layout.astro';
+import PageTitle from '../../sections/PageTitle.tsx';
+import SharedForm from '../../components/forms/SharedForm.tsx';
+import { site } from '../../config/site';
+
+const meta = {
+    title: "Sell My Restaurant",
+    seo_title: "Sell My Restaurant | Confidential Restaurant Sales in California",
+    seo_description: "Sell your restaurant confidentially with expert broker representation. Free valuation, qualified buyer screening, and full transaction management.",
+    sub_title: "Expert seller representation from valuation to closing — built for restaurant and food service owners across Southern California.",
+    seo_image: "/images/marketing/seller-representation.webp",
+    url: `${site.url}/services/sell-my-restaurant`,
+    image: "/images/marketing/blue_tech_bg.webp",
+};
+
+---
+
+<Layout {...meta}>
+    <script type="application/ld+json" slot="head" set:html={JSON.stringify([
+        {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "@id": `${site.url}/services/sell-my-restaurant#service`,
+            "name": "Restaurant Seller Representation",
+            "description": "Expert seller representation to maximize your restaurant's value. Confidential marketing, buyer screening, and full transaction management for restaurant and food service businesses in California.",
+            "url": `${site.url}/services/sell-my-restaurant`,
+            "provider": {
+                "@type": "Organization",
+                "@id": `${site.url}/#organization`
+            },
+            "areaServed": {
+                "@type": "State",
+                "name": "California"
+            },
+            "serviceType": "Business Brokerage",
+            "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Seller Representation Services",
+                "itemListElement": [
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Broker Price Opinion",
+                            "description": "Comprehensive valuation using SDE analysis, industry multiples, and current market data to set the right asking price."
+                        }
+                    },
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Confidential Marketing",
+                            "description": "Targeted buyer outreach through blind listings, NDA-protected materials, and qualified buyer networks while protecting business identity."
+                        }
+                    },
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Transaction Management",
+                            "description": "End-to-end deal coordination including buyer screening, negotiation, due diligence oversight, and closing."
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            "name": "How to Sell Your Restaurant",
+            "description": "The step-by-step process for selling a restaurant through Smith Allen Group.",
+            "step": [
+                {
+                    "@type": "HowToStep",
+                    "position": 1,
+                    "name": "Free Valuation",
+                    "text": "We analyze your financials, calculate SDE, apply industry multiples, and assess market conditions to determine your restaurant's fair market value."
+                },
+                {
+                    "@type": "HowToStep",
+                    "position": 2,
+                    "name": "Preparation & Packaging",
+                    "text": "We prepare a Confidential Information Memorandum, organize financial documentation, and build the marketing narrative that positions your business to attract serious buyers."
+                },
+                {
+                    "@type": "HowToStep",
+                    "position": 3,
+                    "name": "Confidential Marketing",
+                    "text": "Your business is marketed through blind listings, buyer databases, and targeted outreach — all while protecting your identity and keeping staff, vendors, and customers unaware."
+                },
+                {
+                    "@type": "HowToStep",
+                    "position": 4,
+                    "name": "Buyer Screening & Negotiation",
+                    "text": "Every interested buyer signs an NDA and provides proof of funds before seeing details. We negotiate price, terms, and deal structure on your behalf."
+                },
+                {
+                    "@type": "HowToStep",
+                    "position": 5,
+                    "name": "Due Diligence & Closing",
+                    "text": "We coordinate escrow, manage the due diligence process, facilitate lease assignment, and guide both parties through to a successful close."
+                }
+            ]
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "How long does it take to sell a restaurant?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Most restaurant sales take 3 to 9 months from listing to close. Factors that influence timeline include asking price accuracy, financial documentation quality, lease transferability, and current market conditions. Well-priced restaurants with clean books sell faster."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "How much is my restaurant worth?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Restaurant value is primarily based on Seller's Discretionary Earnings (SDE) multiplied by an industry multiple, typically ranging from 1.5x to 3.5x depending on earnings level, concept type, lease terms, and location. Use our free SDE Calculator for an instant estimate, or request a formal Broker Price Opinion for a detailed valuation."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Will my employees and customers find out I'm selling?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Not if the sale is handled correctly. We market your business as a blind listing — no name, no address, no identifying details are shared publicly. Every prospective buyer must sign a Non-Disclosure Agreement and verify financial qualifications before receiving any identifying information about your business."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "What documents do I need to sell my restaurant?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "At minimum you'll need 3 years of tax returns, recent profit and loss statements, a current balance sheet, your lease agreement, liquor license documentation (if applicable), equipment lists, and any franchise agreements. We help organize and present these documents as part of our seller representation."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "What does a business broker charge to sell a restaurant?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Business broker commissions for restaurant sales typically range from 8% to 12% of the final sale price, with the percentage decreasing as the transaction size increases. Most brokers, including Smith Allen Group, work on a success-fee basis — you pay nothing unless the sale closes."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Can I sell my restaurant if my lease is expiring soon?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes, but lease terms directly affect your sale price and buyer pool. Buyers and their lenders typically want at least 5 years remaining on the lease (including options). If your lease is expiring, we can negotiate a renewal or extension with your landlord before or during the sale process to protect your business value."
+                    }
+                }
+            ]
+        }
+    ])} />
+    <PageTitle title={meta.title} sub_title={meta.sub_title} image={meta.image} />
+
+    <section class="container max-w-7xl py-12">
+        <div class="flex flex-col lg:flex-row lg:items-start lg:gap-x-20">
+
+            <!-- Content (Left) -->
+            <div class="lg:w-2/3">
+                <h2>Selling a Restaurant Is Not Like Selling a House</h2>
+                <p>A restaurant sale involves live operations, employees who don't know, customers who can't know, a lease that has to transfer, and financial records that need to tell a clear story. Get any of those wrong and the deal falls apart — or worse, your business suffers while you're trying to sell it.</p>
+                <p>Smith Allen Group provides full seller representation for restaurant and food service business owners across Southern California. We manage every stage of the transaction — from the initial valuation through closing — so you can keep running your business while we find the right buyer at the right price.</p>
+
+                <h2>What We Do for Sellers</h2>
+
+                <h3>Broker Price Opinion & Valuation</h3>
+                <p>Every engagement starts with understanding what your business is actually worth. We analyze your <a href="/blog/sellers-discretionary-earnings-and-business-valuations">Seller's Discretionary Earnings (SDE)</a>, apply current industry multiples based on your concept type and earnings tier, and factor in lease terms, location, equipment condition, and market demand.</p>
+                <p>This isn't a generic formula. We look at your specific financials, normalize the numbers to reflect true owner benefit, and benchmark against recent comparable transactions in the Southern California market. The result is a Broker Price Opinion that gives you a realistic, defensible asking price — not a number pulled from thin air to win your listing.</p>
+                <p>Want a quick estimate first? <a href="/resources/calculators/sde-calculator">Try our free SDE Calculator</a> to see where your business falls before we talk.</p>
+
+                <h3>Confidential Marketing</h3>
+                <p>Confidentiality is not optional — it's the foundation of the entire process. If employees, customers, or vendors learn a business is for sale before the right time, the damage can be immediate and irreversible. Staff starts looking for new jobs. Customers drift. Suppliers tighten terms.</p>
+                <p>We market your restaurant as a blind listing — no business name, no address, no identifying details in any public materials. We prepare a <strong>Confidential Information Memorandum (CIM)</strong> that highlights your business strengths while protecting your identity. Every prospective buyer must <a href="/nda">sign a Non-Disclosure Agreement</a> and provide proof of financial qualification before they see anything specific about your business.</p>
+                <p>Our marketing reaches qualified buyers through multiple channels: our internal buyer database, industry listing platforms, professional networks, and targeted outreach to operators and investors actively looking in your market.</p>
+
+                <h3>Buyer Screening & Qualification</h3>
+                <p>Not every interested party is a serious buyer. We screen every inquiry for financial capacity, relevant experience, and genuine intent before they get access to your business details. This protects your confidentiality and your time.</p>
+                <p>For deals involving <a href="/blog/business-loans-capital-sources-for-small-businesses">SBA financing</a>, we verify pre-qualification status and work with lenders to ensure the buyer can actually close. Nothing derails a sale faster than a buyer who can't secure funding — we catch that early.</p>
+
+                <h3>Negotiation & Deal Structure</h3>
+                <p>Price is only one element of the deal. We negotiate the full structure: payment terms, earnout provisions, training periods, non-compete agreements, <a href="/services/lease-negotiation">lease assignment terms</a>, inventory valuation, and transition timelines.</p>
+                <p>Our goal is a deal that works for both sides — because deals that only favor one party tend to fall apart in due diligence or post-closing. We've seen enough transactions to know which structures hold and which create problems down the road.</p>
+
+                <h3>Due Diligence & Closing</h3>
+                <p>Once terms are agreed, we coordinate the due diligence process — managing document requests, facilitating inspections, coordinating with escrow, and keeping both parties' attorneys and accountants on track. We monitor every milestone to prevent delays.</p>
+                <p>For businesses with liquor licenses, we manage the <a href="/services/liquor-license-transfer">ABC transfer process</a> timeline alongside the sale. For franchise locations, we coordinate franchisor approval requirements. Whatever your business involves, we've handled it before.</p>
+
+                <h2>The Selling Process: What to Expect</h2>
+                <p>Every restaurant sale is different, but the general timeline follows a predictable pattern:</p>
+
+                <ol>
+                    <li><strong>Initial consultation and valuation (Week 1-2):</strong> We meet, review your financials, tour the operation, and deliver a Broker Price Opinion with a recommended asking price range.</li>
+                    <li><strong>Preparation and packaging (Week 2-4):</strong> We organize your financial documentation, prepare the Confidential Information Memorandum, take photos (without identifying the location), and build your listing profile.</li>
+                    <li><strong>Confidential marketing launch (Week 4+):</strong> Your blind listing goes live across multiple platforms. We begin targeted outreach to qualified buyers in our network.</li>
+                    <li><strong>Showings and buyer screening (Ongoing):</strong> Qualified, NDA-signed buyers receive detailed information and schedule confidential visits — typically outside business hours to protect your operation.</li>
+                    <li><strong>Offer negotiation (When received):</strong> We present offers, advise on terms, and negotiate on your behalf. Multiple offers allow us to create competitive leverage.</li>
+                    <li><strong>Due diligence and escrow (30-60 days typically):</strong> Buyer verifies financials, inspects equipment, reviews the lease, and secures financing. We manage the process to prevent delays.</li>
+                    <li><strong>Closing and transition (1-2 weeks):</strong> Documents are signed, funds transfer through escrow, and we coordinate a smooth transition including agreed training for the new owner.</li>
+                </ol>
+
+                <h2>Types of Businesses We Sell</h2>
+                <p>Our seller representation covers the full spectrum of food and beverage operations:</p>
+                <ul>
+                    <li><strong>Full-service restaurants</strong> — fine dining, casual dining, family restaurants</li>
+                    <li><strong>Quick-service and fast casual</strong> — counter service, takeout-focused, fast food</li>
+                    <li><strong>Bars and nightlife</strong> — bars, lounges, nightclubs (including <a href="/blog/bars-for-sale-california">Type 47 and Type 48 license</a> transfers)</li>
+                    <li><strong>Cafes and coffee shops</strong> — <a href="/blog/cafes-for-sale">independent cafes</a>, specialty coffee, tea houses</li>
+                    <li><strong>Franchise locations</strong> — <a href="/services/franchise-resale">franchise resales</a> with franchisor coordination</li>
+                    <li><strong>Catering companies</strong> — event catering, corporate catering, meal prep</li>
+                    <li><strong>Bakeries and dessert shops</strong> — wholesale and retail bakeries, ice cream, specialty desserts</li>
+                    <li><strong>Commercial kitchens</strong> — ghost kitchens, commissary kitchens, shared kitchen spaces</li>
+                    <li><strong>Food manufacturing</strong> — packaged food production, specialty food businesses</li>
+                </ul>
+
+                <h2>Why Confidentiality Matters More Than You Think</h2>
+                <p>We've seen what happens when a sale becomes public knowledge too early. A <a href="/blog/how-to-sell-your-business-california">restaurant owner in California</a> who listed without proper confidentiality protections lost three key employees within two weeks — not because the business was failing, but because uncertainty made them nervous. The kitchen couldn't maintain quality, regulars noticed, and Yelp reviews started slipping. The business ultimately sold, but for less than it would have if confidentiality had been maintained.</p>
+                <p>This is why every step of our process is built around protecting your business while it's on the market. Your employees, customers, vendors, and competitors should learn about the sale only after it closes — not before.</p>
+
+                <h2>When Is the Right Time to Sell?</h2>
+                <p>The best time to sell is when your business is performing well, your financials are clean, and your lease has favorable terms remaining. Selling from a position of strength always produces better outcomes than selling under pressure.</p>
+                <p>If you're <a href="/blog/selling-a-business-to-retire-maximizing-your-exit-strategy">thinking about retirement</a>, <a href="/blog/selling-a-business-due-to-burnout-surviving-the-grind-before-it-hits">experiencing burnout</a>, or simply <a href="/blog/how-to-sell-a-business-after-losing-passion-when-the-fire-fades">ready for your next chapter</a>, the smart move is to start the conversation early. Our <a href="/services/exit-planning">exit planning services</a> can help you prepare your business for sale 6 to 18 months in advance — optimizing your financials, resolving lease issues, and positioning the business to attract the strongest offers.</p>
+                <p>Not sure where you stand? <a href="/resources/calculators/sde-calculator">Run your numbers through our SDE Calculator</a> for a quick estimate, then schedule a confidential conversation to discuss your options.</p>
+
+                <h2>Frequently Asked Questions</h2>
+
+                <h3>How long does it take to sell a restaurant?</h3>
+                <p>Most restaurant sales take 3 to 9 months from listing to close. Factors that influence timeline include asking price accuracy, financial documentation quality, lease transferability, and current market conditions. Well-priced restaurants with clean books sell faster.</p>
+
+                <h3>How much is my restaurant worth?</h3>
+                <p>Restaurant value is primarily based on Seller's Discretionary Earnings (SDE) multiplied by an industry multiple, typically ranging from 1.5x to 3.5x depending on earnings level, concept type, lease terms, and location. <a href="/resources/calculators/sde-calculator">Use our free SDE Calculator</a> for an instant estimate, or <a href="/contact">request a formal Broker Price Opinion</a> for a detailed valuation.</p>
+
+                <h3>Will my employees and customers find out I'm selling?</h3>
+                <p>Not if the sale is handled correctly. We market your business as a blind listing — no name, no address, no identifying details are shared publicly. Every prospective buyer must sign a Non-Disclosure Agreement and verify financial qualifications before receiving any identifying information.</p>
+
+                <h3>What documents do I need to sell my restaurant?</h3>
+                <p>At minimum you'll need 3 years of tax returns, recent profit and loss statements, a current balance sheet, your lease agreement, liquor license documentation (if applicable), equipment lists, and any franchise agreements. We help organize and present these documents as part of our seller representation.</p>
+
+                <h3>What does a business broker charge to sell a restaurant?</h3>
+                <p>Business broker commissions for restaurant sales typically range from 8% to 12% of the final sale price, with the percentage decreasing as the transaction size increases. Smith Allen Group works on a success-fee basis — you pay nothing unless the sale closes.</p>
+
+                <h3>Can I sell my restaurant if my lease is expiring soon?</h3>
+                <p>Yes, but lease terms directly affect your sale price and buyer pool. Buyers and their lenders typically want at least 5 years remaining on the lease (including options). If your lease is expiring, we can negotiate a renewal or extension with your landlord before or during the sale process to protect your business value.</p>
+
+                <h2>Ready to Explore Your Options?</h2>
+                <p>Selling your restaurant is a significant decision. Whether you're ready to list now or just starting to think about it, a confidential conversation costs nothing and commits you to nothing.</p>
+                <p><a href="/resources/calculators/sde-calculator">See what your business is worth</a> with our free calculator, or fill out the form to schedule a confidential consultation. We'll give you an honest assessment of your business, your market, and your options.</p>
+            </div>
+
+            <!-- Form (Right) -->
+            <div class="mt-12 lg:mt-0 lg:w-1/3 lg:sticky lg:top-24">
+                <SharedForm client:load />
+            </div>
+
+        </div>
+    </section>
+</Layout>

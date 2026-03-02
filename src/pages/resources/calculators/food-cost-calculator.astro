@@ -1,0 +1,266 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import PageTitle from '../../../sections/PageTitle.tsx';
+import FoodCostCalculator from '../../../components/resources/FoodCostCalculator.tsx';
+import { site } from '../../../config/site';
+
+const seoTitle = "Food Cost Calculator — Free Recipe Costing Tool for Restaurants";
+const seoDescription = "Calculate your restaurant's food cost percentage per dish with our free tool. Compare to industry benchmarks by concept type, get suggested pricing, and download a PDF report.";
+
+const calculatorSchema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "@id": `${site.url}/resources/calculators/food-cost-calculator#app`,
+    "name": "Restaurant Food Cost Calculator",
+    "alternateName": "Recipe Costing Calculator",
+    "description": "Calculate your restaurant's food cost percentage per dish, compare to industry benchmarks by concept type, and get suggested menu pricing.",
+    "url": `${site.url}/resources/calculators/food-cost-calculator`,
+    "applicationCategory": "BusinessApplication",
+    "applicationSubCategory": "Financial Calculator",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "inLanguage": "en-US",
+    "isPartOf": {
+      "@type": "WebSite",
+      "@id": `${site.url}/#website`
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Per-dish food cost percentage calculation",
+      "Dynamic ingredient cost builder with waste adjustments",
+      "Benchmarks for 10 restaurant concept types",
+      "Suggested menu pricing at 25%, 30%, and 35% food cost",
+      "Cost breakdown by ingredient",
+      "Downloadable PDF food cost report",
+      "Real-time calculations as you type"
+    ],
+    "provider": {
+      "@type": "Organization",
+      "@id": `${site.url}/#organization`
+    },
+    "author": {
+      "@type": "Person",
+      "@id": `${site.url}/#${site.business.founder.slug}`
+    },
+    "potentialAction": {
+      "@type": "UseAction",
+      "target": `${site.url}/resources/calculators/food-cost-calculator`,
+      "name": "Calculate Food Cost"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is food cost percentage and how is it calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Food cost percentage is the ratio of ingredient costs to menu price, expressed as a percentage. The formula is: Food Cost % = (Total Ingredient Cost / Menu Price) x 100. For example, if a dish costs $7.50 in ingredients and sells for $25, the food cost is 30%. This metric is critical for pricing decisions and profitability analysis."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a good food cost percentage for a restaurant?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A good food cost percentage varies by concept type. Full-service restaurants typically target 28-32%, fast casual aims for 25-30%, QSR operations run 22-28%, and bars or breweries can achieve 18-25% since beverage margins are higher. The industry-wide average is roughly 28-32%, but what matters most is how your food cost fits within your overall prime cost (food + labor) target of 55-65%."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does food cost vary by restaurant concept?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Fine dining restaurants typically run 28-35% food cost because they use premium ingredients but charge higher prices. Fast casual concepts target 25-30% with simpler preparations and lower price points. QSR and pizza operations can achieve 22-28% through standardized recipes and bulk purchasing. Bars and breweries often see the lowest food costs at 18-25%, especially on beverages. Cafes and coffee shops range from 20-28% depending on their food menu complexity."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between food cost and prime cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Food cost measures only ingredient expenses as a percentage of sales. Prime cost combines food cost AND labor cost as a percentage of sales — it's the two largest controllable expenses in any restaurant. While food cost targets vary by concept (22-35%), prime cost should ideally fall between 55-65% of gross sales regardless of concept type. A restaurant with 30% food cost and 32% labor cost has a 62% prime cost."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I lower my food cost percentage?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The most effective strategies include: strict portion control with standardized recipes and prep sheets, negotiating with multiple suppliers for competitive pricing, reducing waste through proper storage and FIFO rotation, menu engineering to promote high-margin dishes, adjusting menu prices to reflect current ingredient costs, cross-utilizing ingredients across multiple dishes to reduce spoilage, and conducting regular inventory counts to identify shrinkage or theft."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does food cost impact my restaurant's value when selling?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Food cost directly affects your Seller's Discretionary Earnings (SDE), which is the primary metric used to value owner-operated restaurants. Every dollar saved on food cost flows directly to the bottom line and SDE. Since restaurants typically sell for 1.5x to 3.5x SDE, reducing food cost by even 2-3 percentage points can increase your business value by tens of thousands of dollars. Buyers also view disciplined food costs as a sign of a well-managed, transferable operation."
+        }
+      }
+    ]
+  }
+];
+---
+
+<Layout
+  seo_title={seoTitle}
+  seo_description={seoDescription}
+  seo_image="/images/marketing/financial-performance.webp"
+  url={`${site.url}/resources/calculators/food-cost-calculator`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(calculatorSchema)} slot="head"></script>
+
+  <PageTitle
+    title="Food Cost Calculator"
+    sub_title="Calculate your restaurant's food cost percentage per dish. Compare to benchmarks by concept type, get suggested pricing, and download a PDF report."
+    image="/images/marketing/financial-performance.webp"
+    client:load
+  />
+
+  <section class="container max-w-7xl py-12 md:py-16">
+    <FoodCostCalculator client:load />
+  </section>
+
+  <!-- Educational Content for SEO -->
+  <section class="bg-gray-50 border-t border-gray-200">
+    <div class="container max-w-7xl py-12 md:py-16">
+      <div class="max-w-3xl">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Understanding Food Cost Percentage</h2>
+
+        <div class="max-w-none">
+          <p>
+            Food cost percentage is the single most important metric for menu pricing decisions. It tells you exactly how much of every dollar a customer spends goes toward the ingredients on the plate. Get it right, and you have a profitable dish. Get it wrong — even by a few percentage points across a full menu — and the impact on your bottom line compounds fast.
+          </p>
+          <p>
+            The formula is straightforward: <strong>Food Cost % = (Total Ingredient Cost / Menu Price) x 100</strong>. If a dish costs $8.40 in ingredients and you sell it for $28, your food cost is 30%. That leaves $19.60 per plate to cover labor, rent, and everything else.
+          </p>
+
+          <h3>How to Calculate Food Cost Step by Step</h3>
+          <p>
+            Accurate food costing starts at the ingredient level, not the P&amp;L. Here is how to calculate it for any dish:
+          </p>
+          <ul>
+            <li><strong>List every ingredient</strong> — including garnishes, sauces, and cooking oils. The items you forget to cost are the ones that erode margin.</li>
+            <li><strong>Measure exact quantities</strong> — use standardized recipes with precise measurements. "A handful of cheese" is not a recipe; it is a margin leak.</li>
+            <li><strong>Use current supplier pricing</strong> — costs fluctuate. Update your recipe costs quarterly at minimum, monthly if you are in a volatile supply environment.</li>
+            <li><strong>Account for waste and yield loss</strong> — a pound of raw chicken is not a pound of cooked chicken. Proteins typically lose 15-25% to trimming and cooking. Produce averages 10-15%. Our calculator includes a waste factor for each ingredient to capture this.</li>
+            <li><strong>Calculate total dish cost</strong> — sum all adjusted ingredient costs.</li>
+            <li><strong>Divide by menu price</strong> — multiply by 100 for the percentage.</li>
+          </ul>
+
+          <h3>Food Cost Benchmarks by Restaurant Type</h3>
+          <p>
+            There is no single "correct" food cost — it depends entirely on your concept, pricing strategy, and how your cost structure balances food against labor. Here are the ideal ranges we see across deal flow in Southern California:
+          </p>
+          <ul>
+            <li><strong>Fine Dining:</strong> 28-35% — premium ingredients justify higher costs, offset by higher check averages</li>
+            <li><strong>Full Service:</strong> 28-32% — the most common benchmark range for sit-down restaurants</li>
+            <li><strong>Fast Casual:</strong> 25-30% — simpler prep and lower price points demand tighter control</li>
+            <li><strong>QSR / Fast Food:</strong> 22-28% — volume-driven with standardized recipes and bulk purchasing</li>
+            <li><strong>Cafe / Coffee Shop:</strong> 20-28% — beverage-heavy concepts run lower; food-forward cafes trend higher</li>
+            <li><strong>Bakery:</strong> 25-35% — wide range depending on ingredient quality and pricing strategy</li>
+            <li><strong>Bar / Brewery:</strong> 18-25% — beverage margins pull the overall number down significantly</li>
+            <li><strong>Catering:</strong> 28-35% — similar to full service, but with volume purchasing advantages</li>
+            <li><strong>Pizza:</strong> 22-28% — flour-based products offer strong margins when portioned correctly</li>
+            <li><strong>Food Truck:</strong> 25-32% — lower overhead offsets slightly higher per-unit food costs</li>
+          </ul>
+
+          <h3>The Relationship Between Food Cost and Menu Pricing</h3>
+          <p>
+            Food cost percentage and menu pricing exist in a direct relationship — but it is not as simple as just hitting a target number. Two concepts worth understanding:
+          </p>
+          <p>
+            <strong>Markup vs. margin.</strong> A 300% markup (3x ingredient cost) gives you a 33% food cost. A 400% markup (4x) gives you 25%. Most restaurants land somewhere between 3x and 4x, depending on concept. But markup alone does not tell you if a dish is profitable — a $2 side at 25% food cost contributes $1.50 in gross profit, while a $40 entree at 32% food cost contributes $27.20. Gross profit dollars matter as much as percentages.
+          </p>
+          <p>
+            <strong>Menu engineering.</strong> The smartest operators do not price every dish at the same food cost target. They balance the menu — running tighter margins on signature items that drive traffic and higher margins on sides, appetizers, and beverages. The goal is a blended food cost across the full menu that hits your target, not uniform pricing on every plate.
+          </p>
+
+          <h3>How to Reduce Food Cost</h3>
+          <p>
+            If your food cost is running above your concept's ideal range, here are the most effective levers — ranked by impact based on what we see in the restaurants we work with:
+          </p>
+          <ul>
+            <li><strong>Portion control:</strong> This is where most of the money goes. Invest in portion scales, use standardized prep sheets, and train every line cook on exact specs. A half-ounce overpour on protein across 200 covers per day adds up to thousands per month.</li>
+            <li><strong>Supplier negotiation:</strong> Get quotes from multiple distributors. Even a 2-3% reduction in your primary protein cost moves the needle on your overall food cost.</li>
+            <li><strong>Menu engineering:</strong> Push high-margin items through menu placement, server training, and specials. Remove or re-engineer dishes with unsustainable food costs.</li>
+            <li><strong>Waste tracking:</strong> Implement daily waste logs. You cannot manage what you do not measure. Track spoilage, over-prep, and plate waste separately.</li>
+            <li><strong>Cross-utilization:</strong> Design your menu so ingredients appear in multiple dishes. One protein across three preparations reduces spoilage and purchasing complexity.</li>
+            <li><strong>Inventory management:</strong> Conduct weekly inventory counts. FIFO (first in, first out) rotation prevents spoilage. Track actual usage against theoretical usage to identify shrinkage.</li>
+          </ul>
+          <p>
+            For a broader look at <a href="/blog/the-critical-financial-performance-factor-when-selling-a-business-a-sellers-guide/">how financial performance drives business value</a>, see our seller's guide.
+          </p>
+
+          <h3>Food Cost and Business Valuation</h3>
+          <p>
+            Here is where food cost connects directly to what your restaurant is worth. Most owner-operated restaurants are valued using <a href="/blog/sellers-discretionary-earnings-and-business-valuations/">Seller's Discretionary Earnings (SDE)</a> — and every dollar you save on food cost flows straight to SDE.
+          </p>
+          <p>
+            The math is straightforward. If your restaurant does $1.2M in revenue and you reduce food cost by 3 percentage points (say from 35% to 32%), that is $36,000 per year added to your SDE. With restaurants selling at 2x-3x SDE multiples, that $36,000 improvement translates to $72,000-$108,000 in additional business value. Use our <a href="/resources/calculators/sde-calculator">SDE calculator</a> to see how the numbers work for your specific situation.
+          </p>
+          <p>
+            Beyond the math, buyers and their advisors scrutinize food costs during due diligence. A restaurant running at or below benchmark signals operational discipline — the kind of business that transfers well to a new owner. A restaurant with bloated food costs raises red flags: is the waste structural? Are recipes standardized? Will the margins hold under new management?
+          </p>
+          <p>
+            If you are considering <a href="/services/sell-my-restaurant">selling your restaurant</a>, getting food costs under control before going to market is one of the highest-return investments you can make. It improves both your asking price and your ability to close.
+          </p>
+
+          <h3>Food Cost vs. Prime Cost</h3>
+          <p>
+            Food cost is only half the picture. <strong>Prime cost</strong> — food cost plus labor cost as a percentage of revenue — is the metric that determines whether a restaurant is actually profitable. The target range for prime cost is 55-65% regardless of concept type.
+          </p>
+          <p>
+            A restaurant can run 28% food cost and still be unprofitable if labor is at 40%. Conversely, a fine-dining operation at 34% food cost can be highly profitable if labor runs at 28% — bringing prime cost to a healthy 62%. The two numbers work in concert.
+          </p>
+          <p>
+            When evaluating your food cost, always consider it alongside labor. A restaurant with a <a href="/services/restaurant-valuation">strong valuation</a> typically has both numbers dialed in, not just one.
+          </p>
+
+          <h3>Common Food Cost Mistakes</h3>
+          <p>
+            After reviewing financials on hundreds of restaurant transactions, these are the food cost mistakes we see most often:
+          </p>
+          <ul>
+            <li><strong>Not accounting for waste:</strong> Raw ingredient cost is not the same as plate cost. Ignoring yield loss on proteins, produce trim, and cooking shrinkage understates your real food cost by 10-20%.</li>
+            <li><strong>Inconsistent portioning:</strong> If three cooks plate the same dish differently, your actual food cost fluctuates with every shift. Standardized recipes exist on paper in most restaurants — the question is whether anyone follows them.</li>
+            <li><strong>Stale recipe costs:</strong> Ingredient prices change. A recipe costed six months ago may be off by 10-15% today. Update costs quarterly at minimum.</li>
+            <li><strong>Ignoring small items:</strong> The "it's just oil" or "it's just garnish" mentality adds up. Every ingredient has a cost. Every cost hits margin.</li>
+            <li><strong>Pricing based on competitors:</strong> Setting menu prices based on what the restaurant next door charges instead of what your ingredients cost is a recipe for margin problems. Price from your costs, not theirs.</li>
+          </ul>
+
+          <h3>Need Help Optimizing Before a Sale?</h3>
+          <p>
+            Food cost optimization is one of the fastest ways to increase your restaurant's value before going to market. If you are thinking about selling, our team can review your financials and identify specific opportunities to improve margins and maximize your SDE.
+          </p>
+          <p>
+            We have worked with hundreds of restaurant owners across Southern California — from independent operators to multi-unit groups. A confidential conversation costs nothing and gives you a clear picture of where you stand.
+          </p>
+        </div>
+
+        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            Request Free Broker Price Opinion
+          </a>
+          <a
+            href="/services/sell-my-restaurant"
+            class="inline-flex items-center justify-center px-6 py-3 bg-white text-gray-900 font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+          >
+            Learn About Selling
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,60 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageTitle from '../sections/PageTitle.tsx';
+import AnimatedFAQ from '../components/AnimatedFAQ.tsx';
+import { getCollection } from 'astro:content';
+import { marked } from 'marked';
+
+// Fetch all FAQs from local content collection
+const allFaqs = await getCollection('faqs');
+
+// Sort by order descending (highest order first)
+const sortedFaqs = allFaqs.sort((a, b) => (b.data.order ?? 0) - (a.data.order ?? 0));
+
+// Convert markdown body to HTML and format for AnimatedFAQ component
+const faqsForComponent = await Promise.all(
+  sortedFaqs.map(async (faq) => {
+    const answerHTML = await marked.parse(faq.body ?? '');
+    return {
+      _id: faq.id,
+      question: faq.data.question,
+      answerHTML,
+      tags: faq.data.tags ?? [],
+    };
+  })
+);
+
+const seoTitle = "FAQS - Restaurant Business Questions Answered";
+const seoDescription = "Get answers to the most common restaurant business questions from our expert brokers. From pricing to operations, we've got you covered.";
+
+// Generate FAQ Schema for structured data
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqsForComponent.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answerHTML.replace(/<[^>]*>/g, '')
+    }
+  }))
+};
+---
+
+<Layout
+  seo_title={seoTitle}
+  seo_description={seoDescription}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head"></script>
+  <PageTitle
+    title="FAQS and Answers"
+    sub_title="Where we find the most pressing and asked questions about selling a restaurant business and do our best to answer them with clear and concise answers that are easy to understand."
+    image="/images/marketing/answer-the-public.webp"
+    client:load
+  />
+
+  <section class="container max-w-7xl py-12">
+    <AnimatedFAQ faqs={faqsForComponent} client:load />
+  </section>
+</Layout>

@@ -1,0 +1,74 @@
+---
+import { getCollection } from 'astro:content';
+import { formatCurrency } from '../lib/api';
+import { formatCuisine, getStatusConfig } from '../utils/conceptMapping';
+
+interface Props {
+  className?: string;
+}
+
+const { className = '' } = Astro.props;
+
+const allListings = await getCollection('listings');
+const listings = allListings.filter(l => l.data.is_featured === true);
+
+---
+
+{listings.length > 0 && (
+  <section class={className}>
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="text-center mb-10">
+        <h2>Featured Listings</h2>
+        <!--<p class="text-gray-600">Explore our handpicked selection of exceptional business opportunities.</p>-->
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {listings.map((listing) => {
+          const statusConfig = getStatusConfig(listing.data.status);
+          const cuisines = Array.isArray(listing.data.cuisine) ? listing.data.cuisine : [];
+          const isComingSoon = listing.data.status === 'coming_soon';
+          const slug = listing.id.replace(/\.md$/, '');
+          return (
+            <a
+              href={`/listings/${slug}/`}
+              class="relative flex flex-col bg-white rounded shadow p-4 hover:shadow-lg transition-all hover:no-underline overflow-hidden"
+            >
+              {listing.data.includes_real_estate && (
+                <div class="absolute top-[31px] -right-9 z-10 rotate-45 bg-emerald-600 text-white text-xs font-semibold py-1 px-12 shadow-md">
+                  Real Estate
+                </div>
+              )}
+              {listing.data.featured_image && (
+                <img
+                  src={listing.data.featured_image}
+                  alt={listing.data.title}
+                  class="w-full h-48 object-cover rounded mb-4"
+                />
+              )}
+              <div class="flex-grow">
+                <h3 class="line-clamp-2 text-lg font-semibold">{listing.data.title}</h3>
+                {cuisines.length > 0 && <p class="text-sm text-gray-500">Cuisine: {formatCuisine(cuisines)}</p>}
+                {listing.data.seo_description && <div class="text-gray-700 line-clamp-3 pt-3">{listing.data.seo_description}</div>}
+              </div>
+              <div class="mt-6 flex items-center justify-between">
+                <p class="font-semibold m-0">
+                  {isComingSoon ? 'TBD' : (listing.data.listing_price ? formatCurrency(listing.data.listing_price) : '')}
+                </p>
+                <span class={statusConfig.classes}>
+                  {statusConfig.label}
+                </span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+      <div class="text-center mt-10">
+        <a
+          href="/listings/"
+          class="rounded-md bg-white px-5 py-3 text-sm font-semibold text-gray-900 border-2 border-gray-900 shadow-xs hover:no-underline hover:bg-gray-50"
+        >
+          View All Listings
+        </a>
+      </div>
+    </div>
+  </section>
+)}

@@ -1,0 +1,102 @@
+<!-- TODO: Replace brand copy -->
+---
+import Layout from '../../layouts/Layout.astro';
+import PageTitle from '../../sections/PageTitle.tsx';
+import { getCollection } from 'astro:content';
+import { ArrowRight } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { site } from '../../config/site';
+
+// Filter out drafts and sort by date (newest first), featured posts first
+const posts = (await getCollection('company-we-keep', ({ data }) => !data.draft))
+    .sort((a, b) => {
+        // Featured posts first
+        if (a.data.featured && !b.data.featured) return -1;
+        if (!a.data.featured && b.data.featured) return 1;
+        // Then by date
+        return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+    });
+
+const meta = {
+    title: "The Company We Keep",
+    seo_title: "The Company We Keep | Smith Allen Group",
+    seo_description: "The Company We Keep at Smith Allen is a curated list of trusted lenders, attorneys, inspectors, contractors, and local pros we confidently recommend—real people who've earned their spot by consistently taking great care of our clients.",
+    sub_title: "A handpicked cast of characters we actually trust enough to introduce to our clients. In a world full of \"recommendations,\" these are the rare few who've earned their spot on the list the old-fashioned way—by showing up and doing great work.",
+    seo_image: "/images/marketing/company_we_keep_social.webp",
+    url: `${site.url}/company-we-keep`,
+    image: "/images/marketing/company_we_keep.webp",
+};
+
+function formatDate(date: Date): string {
+    return date.toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+    });
+}
+---
+
+<Layout {...meta}>
+    <PageTitle title={meta.title} sub_title={meta.sub_title} image={meta.image} />
+
+    <section class="container max-w-7xl py-12">
+        {posts.length === 0 ? (
+            <p class="text-center text-muted-foreground">No posts yet. Check back soon!</p>
+        ) : (
+            <div class="grid gap-y-10 sm:grid-cols-12 ">
+                {posts.map((post) => (
+                    <Card className="order-last border-0 bg-transparent shadow-none sm:order-first sm:col-span-12 lg:col-span-10 lg:col-start-2">
+                        <div class="grid gap-y-6 sm:grid-cols-10 sm:gap-x-5 sm:gap-y-0 md:items-center md:gap-x-8 lg:gap-x-12">
+                            <div class="sm:col-span-5">
+                                <div class="mb-4 md:mb-6">
+                                    <div class="flex flex-wrap gap-3 text-xs tracking-wider text-muted-foreground uppercase md:gap-5 lg:gap-6">
+                                        {post.data.tags?.map((tag) => (
+                                            <span>{tag}</span>
+                                        ))}
+                                    </div>
+                                </div>
+                                <h3 class="text-xl font-semibold md:text-2xl lg:text-3xl">
+                                    <a
+                                        href={`/company-we-keep/${post.slug}/`}
+                                        class="hover:underline"
+                                    >
+                                        {post.data.title}
+                                    </a>
+                                </h3>
+                                <p class="mt-4 text-muted-foreground md:mt-5">
+                                    {post.data.summary}
+                                </p>
+                                <div class="mt-6 flex items-center space-x-2 md:mt-8">
+                                    <a
+                                        href={`/company-we-keep/${post.slug}/`}
+                                        class="inline-flex items-center font-semibold hover:underline md:text-base"
+                                    >
+                                        <span>Read more</span>
+                                        <ArrowRight className="ml-2 size-4 transition-transform" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="order-first sm:order-last sm:col-span-5">
+                                <a href={`/company-we-keep/${post.slug}/`} class="block">
+                                    <div class="aspect-video overflow-clip rounded-lg border border-border">
+                                        {post.data.image ? (
+                                            <img
+                                                src={post.data.image}
+                                                alt={post.data.title}
+                                                class="h-full w-full object-cover transition-opacity duration-200 hover:opacity-70"
+                                            />
+                                        ) : (
+                                            <div class="h-full w-full bg-muted flex items-center justify-center">
+                                                <span class="text-muted-foreground">No image</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </Card>
+                ))}
+            </div>
+        )}
+    </section>
+</Layout>

@@ -1,0 +1,114 @@
+<!-- TODO: Replace brand copy -->
+---
+import Layout from '../../layouts/Layout.astro';
+import PageTitle from '../../sections/PageTitle.tsx';
+import { site } from '../../config/site';
+
+const meta = {
+    title: "Our Services",
+    seo_title: "Restaurant Brokerage Services | Southern California",
+    seo_description: "Full-service restaurant brokerage: sell, buy, value, finance, and lease food & beverage businesses across Southern California. Confidential, expert guidance.",
+    sub_title: "Full-service brokerage for restaurant and food & beverage business owners, buyers, and investors across Southern California.",
+    seo_image: "/images/marketing/buyer-representation.webp",
+    url: `${site.url}/services`,
+    image: "/images/marketing/blue_tech_bg.webp",
+};
+
+const services = [
+    {
+        title: "Sell My Restaurant",
+        href: "/services/sell-my-restaurant",
+        description: "Confidential seller representation with broker price opinions, qualified buyer screening, and full transaction management from listing to close.",
+    },
+    {
+        title: "Buy a Restaurant",
+        href: "/services/buy-a-restaurant",
+        description: "Dedicated buyer representation — concept matching, financial evaluation, negotiation, and due diligence coordination for restaurant acquisitions.",
+    },
+    {
+        title: "Restaurant Valuation",
+        href: "/services/restaurant-valuation",
+        description: "SDE and EBITDA-based valuations, formal Broker Price Opinions, and free online SDE calculator for restaurants and food service businesses.",
+    },
+    {
+        title: "Exit Planning",
+        href: "/services/exit-planning",
+        description: "Strategic 6-18 month exit plans that strengthen financials, operations, and lease position to maximize your restaurant's sale price.",
+    },
+    {
+        title: "Lease Negotiation",
+        href: "/services/lease-negotiation",
+        description: "New leases, renewals, and assignment negotiations built specifically for restaurant operators. TI allowances, exclusive use, and assignment rights.",
+    },
+    {
+        title: "Commercial Real Estate",
+        href: "/services/commercial-real-estate",
+        description: "Restaurant site selection, tenant representation, and landlord services for food & beverage commercial spaces across Southern California.",
+    },
+    {
+        title: "Liquor License Transfer",
+        href: "/services/liquor-license-transfer",
+        description: "California ABC license transfer coordination for restaurant and bar sales — Type 41, 47, 48, and off-sale licenses across Southern California.",
+    },
+];
+
+---
+
+<Layout {...meta}>
+    <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "Business Brokerage",
+        "provider": {
+            "@type": "RealEstateAgent",
+            "name": "Smith Allen Group",
+            "url": site.url
+        },
+        "areaServed": {
+            "@type": "State",
+            "name": "California"
+        },
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Restaurant Brokerage Services",
+            "itemListElement": services.map((s, i) => ({
+                "@type": "Offer",
+                "itemOffered": {
+                    "@type": "Service",
+                    "name": s.title,
+                    "description": s.description,
+                    "url": `${site.url}${s.href}`
+                }
+            }))
+        }
+    })} />
+    <PageTitle title={meta.title} sub_title={meta.sub_title} image={meta.image} />
+
+    <section class="container max-w-7xl py-12 px-6 sm:px-12">
+
+        <h2>What We Do</h2>
+        <p>Smith Allen Group provides end-to-end brokerage services for restaurant and food & beverage businesses across Southern California. Whether you're selling, buying, valuing, financing, or leasing — we handle the entire process with the confidentiality and expertise the industry demands.</p>
+
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-8">
+            {services.map((service) => (
+                <a href={service.href} class="group block rounded-lg border border-gray-200 p-6 transition-shadow hover:shadow-sm no-underline hover:no-underline">
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-gray-700 !mt-0 !mb-2">{service.title}</h3>
+                    <p class="text-sm text-gray-600 !mb-0">{service.description}</p>
+                </a>
+            ))}
+        </div>
+
+        <div class="mt-16">
+            <h2>Why Smith Allen Group</h2>
+            <p>Most business brokers work across every industry — dry cleaners, laundromats, auto shops, restaurants. We focus exclusively on food and beverage. That specialization means we know the metrics that matter: SDE multiples by concept type, rent-to-sales benchmarks, lease assignment pitfalls, ABC license transfer timelines, and the due diligence process that separates a good acquisition from a costly mistake.</p>
+            <p>Every service we offer is built around the reality of restaurant transactions — not adapted from a generic business brokerage playbook. That's the difference between a broker who lists your business and one who actually sells it.</p>
+
+            <div class="mt-8 flex flex-wrap gap-4">
+                <a href="/listings" class="inline-flex items-center rounded-md bg-gray-900 px-6 py-3 text-sm font-medium text-white hover:bg-gray-700 transition-colors">Browse Current Listings</a>
+                <a href="/resources/calculators/sde-calculator" class="inline-flex items-center rounded-md border border-gray-300 px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Free SDE Calculator</a>
+                <a href="/contact" class="inline-flex items-center rounded-md border border-gray-300 px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Contact Us</a>
+            </div>
+        </div>
+
+    </section>
+</Layout>

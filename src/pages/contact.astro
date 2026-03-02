@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageTitle from '../sections/PageTitle.tsx';
+import SharedForm from '../components/forms/SharedForm.tsx';
+import { site, fullAddress } from '../config/site';
+
+const meta = {
+    title: "Contact Us",
+    seo_title: `Contact Us | ${site.name}`,
+    seo_description: `Get in touch with ${site.name} for expert representation in business sales, broker price opinions, and commercial real estate throughout Southern California.`,
+    sub_title: "Experienced and confidential representation in business sales, broker price opinions, and commercial real estate.",
+    seo_image: "/images/marketing/coronado-bridge.jpg",
+    url: `${site.url}/contact`,
+    image: "/images/marketing/blue_tech_bg.webp",
+};
+
+---
+
+<Layout {...meta}>
+    <PageTitle title={meta.title} sub_title={meta.sub_title} image={meta.image} />
+
+    <section class="container max-w-7xl py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div class="col-span-1">
+                <div class="space-y-4 text-lg">
+                    <p>
+                        <a href={site.contact.mapsShareUrl} target="_blank" rel="noopener noreferrer" class="hover:text-gray-600">
+                            {site.contact.address.street}<br />
+                            {site.contact.address.city}, {site.contact.address.state} {site.contact.address.zip}
+                        </a>
+                    </p>
+                    <p>
+                        <a href={`tel:${site.contact.phoneRaw}`} class="hover:text-gray-600">
+                            {site.contact.phone}
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="col-span-2">
+                <SharedForm client:load />
+            </div>
+        </div>
+    </section>
+
+</Layout>

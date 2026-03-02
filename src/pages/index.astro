@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import IndexHero from '../sections/IndexHero.tsx';
+import FeaturedListingsSection from '../sections/FeaturedListingsSection.astro';
+import IndexCalculatorCTA from '../sections/IndexCalculatorCTA.tsx';
+import IndexSellSection from '../sections/IndexSellSection.tsx';
+import IndexTeamSection from '../sections/IndexTeamSection.tsx';
+import { site } from '../config/site';
+---
+
+<Layout>
+    <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": `${site.url}/#website`,
+        "name": site.name,
+        "url": site.url,
+        "description": site.description,
+        "publisher": {
+            "@type": "Organization",
+            "@id": `${site.url}/#organization`
+        },
+        "inLanguage": "en-US"
+    })} />
+    <IndexHero client:load/>
+    <FeaturedListingsSection className="py-16 bg-gray-50" />
+    <IndexCalculatorCTA className="py-16" />
+    <IndexSellSection className="py-16 bg-gray-50" />
+    <IndexTeamSection className="py-16" />
+</Layout>

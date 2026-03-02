@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageTitle from '../sections/PageTitle.tsx';
+import { site } from '../config/site';
+
+const meta = {
+    title: "Thank You",
+    seo_title: `Thank You | ${site.name}`,
+    seo_description: `Thank you for contacting ${site.name}. A member of our team will be in touch with you shortly to follow up on your inquiry.`,
+    sub_title: "We offer expert representation in business sales, broker price opinions, and commercial real estate.",
+    seo_image: "/images/marketing/coronado-bridge.jpg",
+    url: `${site.url}/thank-you`,
+    image: "/images/marketing/coronado-bridge.jpg",
+};
+
+---
+
+<Layout {...meta}>
+    <PageTitle title={meta.title} sub_title={meta.sub_title} image={meta.image}/>
+
+    <section class="container max-w-7xl py-12">
+        <p><span class="font-bold">Thank You for Connecting With Us</span><br>We've received your message and truly appreciate you taking the time to connect. A member of our team will be in touch with you shortly to follow up. In the meantime, feel free to explore more about our services or browse recent insights on our blog. We're here to support you every step of the way.</p>
+    </section>
+</Layout>

@@ -1,0 +1,65 @@
+---
+import BlogPostLayout from '../../layouts/BlogPostLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+    const allPosts = await getCollection('blog', ({ data }) => import.meta.env.PROD ? !data.draft : true);
+    const toSlug = (id: string) => id.replace(/\.md$/, '');
+
+    // Sort by pubDate descending (newest first)
+    const posts = allPosts.sort((a, b) =>
+        new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+    );
+
+    return posts.map((post, index) => ({
+        params: { slug: toSlug(post.id) },
+        props: {
+            post,
+            prevPost: index > 0 ? { title: posts[index - 1].data.title, slug: toSlug(posts[index - 1].id) } : null,
+            nextPost: index < posts.length - 1 ? { title: posts[index + 1].data.title, slug: toSlug(posts[index + 1].id) } : null,
+        },
+    }));
+}
+
+const { post, prevPost, nextPost } = Astro.props;
+const { Content } = await post.render();
+const wordCount = post.body ? post.body.split(/\s+/).filter(Boolean).length : undefined;
+---
+
+<BlogPostLayout
+        title={post.data.title}
+        sub_title={post.data.excerpt}
+        seo_title={post.data.seo_title || post.data.title}
+        seo_description={post.data.seo_description || post.data.excerpt}
+        pubDate={post.data.pubDate.toISOString()}
+        author={post.data.author}
+        image={post.data.featured_image}
+        seo_image={post.data.seo_image || post.data.featured_image}
+        wordCount={wordCount}
+        tags={post.data.tags}
+        faqs={post.data.faqs}
+        prevPost={prevPost}
+        nextPost={nextPost}
+>
+    <Content />
+
+    {(prevPost || nextPost) && (
+            <nav class="mt-16 border-t border-gray-300 pt-6 flex justify-between text-sm text-gray-500">
+                {prevPost ? (
+                        <a href={`/blog/${prevPost.slug}`} class="hover:text-gray-800">
+                            ← {prevPost.title}
+                        </a>
+                ) : (
+                        <span />
+                )}
+
+                {nextPost ? (
+                        <a href={`/blog/${nextPost.slug}`} class="hover:text-gray-800">
+                            {nextPost.title} →
+                        </a>
+                ) : (
+                        <span />
+                )}
+            </nav>
+    )}
+</BlogPostLayout>

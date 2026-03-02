@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ListingsPostTitle from '../sections/ListingsPostTitle.tsx';
+import { ListingGallery } from '../components/ListingGallery.tsx';
+import { format, parseISO } from 'date-fns';
+import { site } from '../config/site';
+
+const {
+    blind,
+    title,
+    seo_title,
+    seo_description,
+    seo_image,
+    county,
+    pubDate,
+    featured_image,
+    address,
+    asking_price,
+    price_rider,
+    gross_revenue,
+    cash_flow,
+    concept,
+    cuisine,
+    status,
+    size,
+    seating,
+    base_rent,
+    lease_term,
+    state,
+    city,
+    includes_real_estate,
+    gallery,
+    hours,
+    established_year,
+    business_name,
+} = Astro.props;
+
+// Filter gallery to only images
+const galleryImages = gallery?.filter((item: any) => item.mime_type?.startsWith('image/')) || [];
+
+const meta = {
+    title,
+    seo_title,
+    seo_description,
+    seo_image,
+    url: `${site.url}${Astro.url.pathname}`,
+    featured_image,
+    isListing: true,
+    // Listing-specific data for schema
+    listingData: {
+        address,
+        asking_price,
+        price_rider,
+        gross_revenue,
+        cash_flow,
+        concept,
+        cuisine,
+        status,
+        size,
+        seating,
+        base_rent,
+        lease_term,
+        state,
+        city,
+        county,
+        pubDate,
+        includes_real_estate,
+        hours,
+        established_year,
+        business_name,
+        blind,
+    }
+};
+
+const formattedDate = pubDate ? format(parseISO(pubDate), 'MMMM d, yyyy') : 'Date not available';
+---
+
+<Layout {...meta}>
+    <ListingsPostTitle
+            blind={blind}
+            title={title}
+            county={county}
+            featured_image={featured_image}
+            includes_real_estate={includes_real_estate}
+    />
+
+    {galleryImages.length > 0 && (
+        <ListingGallery images={galleryImages} client:load />
+    )}
+
+    <section class="container max-w-7xl py-12">
+        <slot />
+    </section>
+</Layout>

@@ -1,0 +1,33 @@
+<!-- TODO: Replace brand copy -->
+---
+import Layout from '../layouts/Layout.astro';
+import PageTitle from '../sections/PageTitle.tsx';
+import { site } from '../config/site';
+
+const meta = {
+    title: "Privacy Policy",
+    seo_title: `Privacy Policy | ${site.name}`,
+    seo_description: `Our privacy policy outlines how ${site.name} protects your information during business sales and maintains confidentiality throughout the entire transaction process.`,
+    sub_title: "We offer expert representation in business sales, broker price opinions, and commercial real estate.",
+    seo_image: "/images/privacy-policy.png",
+    url: `${site.url}/privacy-policy`,
+    image: "/images/privacy-policy.png",
+};
+
+---
+
+<Layout {...meta}>
+    <section class="container max-w-7xl py-12">
+        <h1 class="text-gray-900">Privacy Policy</h1>
+        <!-- TODO: Replace brand copy when rebranding -->
+        <p>At Smith Allen Group, we respect your privacy and will never sell your email address to a third party company, for any purpose. We store all of your contact information in a protected database that is only visible to our team.</p>
+        <p>When we reach out to contact you, we will not reveal the details of our call or what it is in regards to, to any of your staff unless you give us explicit permission to do so. When discussing the sale of your business, we will only discuss sensitive details with you and the approved partners, and no one else.</p>
+        <p>Once your business is listed for sale with us, we only advertise the listing with generic verbiage that is intended to describe the general nature of the business while omitting the name, location and other details that might give away the business's identity. All serious buyers must sign a confidentiality agreement before we reveal the name of your business or any pertinent details. We will never use your business's name when marketing your business for sale either.</p>
+        <p>Our business is built on trust and relationships. This means protecting the privacy of business owners who contact us and hire us to sell their business. Please contact us if you have any questions about how we can protect your privacy during the process of selling your business, or if you'd like to discuss this further in any way.</p>
+        <h2 class="mt-6">How We May Contact You</h2>
+        <p>Occasionally, we may send you material that we think aligns with your interests and is related to the nature of our business. This may come as a mailing or e-mail. You can opt out of these emails at any time by scrolling to the bottom of the email and clicking "unsubscribe".</p>
+        <h2 class="mt-6">Changes To Our Privacy Policy</h2>
+        <p>This policy is subject to change without notice. Should we make any changes to our privacy policy, they will be posted on this page. If you have any questions or concerns regarding our privacy policy, please contact <span class="text-blue-500">privacy[@]smithallengroup.com</span>.</p>
+    </section>
+
+</Layout>

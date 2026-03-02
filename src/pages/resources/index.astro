@@ -1,0 +1,154 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageTitle from '../../sections/PageTitle.tsx';
+import { Calculator, ClipboardCheck, BookOpen, BarChart3, ArrowRight } from 'lucide-react';
+
+const seoTitle = "Restaurant Business Resources - Free Tools, Guides & Calculators";
+const seoDescription = "Free resources for restaurant owners, buyers, and investors. Calculators, assessments, guides, and market insights from San Diego's top restaurant brokers.";
+
+const resourceCategories = [
+  {
+    title: "Calculators",
+    description: "Free financial calculators for valuations, SDE, SBA loans, food costs, and more.",
+    href: "/resources/calculators",
+    icon: Calculator,
+    count: 8,
+    featured: {
+      title: "SDE Calculator",
+      href: "/resources/calculators/sde-calculator",
+    },
+  },
+  {
+    title: "Assessments",
+    description: "Interactive quizzes and assessments to evaluate readiness, fit, and opportunities.",
+    href: "/resources/assessments",
+    icon: ClipboardCheck,
+    count: 4,
+    status: "coming-soon",
+  },
+  {
+    title: "Guides",
+    description: "Step-by-step guides, checklists, and educational content for buyers and sellers.",
+    href: "/resources/guides",
+    icon: BookOpen,
+    count: 3,
+    status: "coming-soon",
+  },
+  {
+    title: "Market Insights",
+    description: "Data and trends on restaurant sales, valuations, and market conditions.",
+    href: "/resources/insights",
+    icon: BarChart3,
+    count: 2,
+    status: "coming-soon",
+  },
+];
+---
+
+<Layout
+  seo_title={seoTitle}
+  seo_description={seoDescription}
+>
+  <PageTitle
+    title="Resources"
+    sub_title="Free tools and guides to help you make smarter decisions about buying, selling, or operating a restaurant business."
+    image="/images/marketing/financial-performance.webp"
+    client:load
+  />
+
+  <section class="container max-w-7xl py-12 md:py-16">
+    <div class="grid md:grid-cols-2 gap-6 lg:gap-8">
+      {resourceCategories.map((category) => {
+        const Icon = category.icon;
+        const isComingSoon = category.status === "coming-soon";
+
+        return (
+          <div class:list={[
+            "relative bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden",
+            isComingSoon && "opacity-75",
+          ]}>
+            {isComingSoon && (
+              <div class="absolute top-4 right-4 text-xs font-medium text-amber-700 bg-amber-100 px-2 py-1 rounded-full z-10">
+                Coming Soon
+              </div>
+            )}
+
+            <div class="p-6 lg:p-8">
+              <div class:list={[
+                "inline-flex p-3 rounded-lg mb-4",
+                isComingSoon ? "bg-gray-100 text-gray-400" : "bg-primary/10 text-primary",
+              ]}>
+                <Icon className="w-6 h-6" />
+              </div>
+
+              <h2 class:list={[
+                "text-xl font-semibold mb-2",
+                isComingSoon ? "text-gray-500" : "text-gray-900",
+              ]}>
+                {category.title}
+              </h2>
+
+              <p class="text-gray-600 mb-4">
+                {category.description}
+              </p>
+
+              <p class="text-sm text-gray-500 mb-6">
+                {category.count} {category.count === 1 ? 'tool' : 'tools'} available
+              </p>
+
+              {!isComingSoon && (
+                <a
+                  href={category.href}
+                  class="inline-flex items-center text-primary font-medium hover:underline"
+                >
+                  Browse {category.title}
+                  <ArrowRight className="ml-1 w-4 h-4" />
+                </a>
+              )}
+            </div>
+
+            {category.featured && !isComingSoon && (
+              <div class="px-6 lg:px-8 py-4 bg-gray-50 border-t border-gray-200">
+                <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Featured</p>
+                <a
+                  href={category.featured.href}
+                  class="text-sm font-medium text-gray-900 hover:text-primary transition-colors"
+                >
+                  {category.featured.title} →
+                </a>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="bg-gray-900 text-white">
+    <div class="container max-w-7xl py-12 md:py-16">
+      <div class="max-w-2xl">
+        <h2 class="text-2xl text-white md:text-3xl font-bold mb-4">
+          Need Personalized Guidance?
+        </h2>
+        <p class="text-gray-300 mb-6">
+          Our resources are a great starting point, but every restaurant is unique. Talk to one of our experienced brokers for personalized advice on buying or selling your restaurant.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center px-6 py-3 bg-white text-gray-900 font-medium rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            Schedule a Consultation
+          </a>
+          <a
+            href="/faqs"
+            class="inline-flex items-center justify-center px-6 py-3 text-white font-medium rounded-lg border border-white/30 hover:bg-white/10 transition-colors"
+          >
+            View FAQs
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

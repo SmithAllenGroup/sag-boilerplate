@@ -1,0 +1,195 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import PageTitle from '../../../sections/PageTitle.tsx';
+import ValuationCalculator from '../../../components/resources/ValuationCalculator.tsx';
+import { site } from '../../../config/site';
+
+// SEO Title: 70 chars - targets "business valuation calculator" (4,400/mo) + "restaurant" + "SDE"
+const seoTitle = "Free Business Valuation Calculator for Restaurants — SDE in 60 Seconds";
+
+// SEO Description: 158 chars - targets "business valuation calculator" + "SDE" + action-oriented
+const seoDescription = "Free business valuation calculator for restaurants. Calculate SDE, apply industry multiples, and get an estimated sale price instantly with a downloadable PDF report.";
+
+const calculatorSchema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "@id": `${site.url}/resources/calculators/sde-calculator#app`,
+    "name": "Restaurant Business Valuation Calculator",
+    "alternateName": ["SDE Calculator", "Restaurant Valuation Calculator"],
+    "description": "Calculate your restaurant's Seller's Discretionary Earnings (SDE) and estimated business value using industry-standard valuation multiples.",
+    "url": `${site.url}/resources/calculators/sde-calculator`,
+    "applicationCategory": "BusinessApplication",
+    "applicationSubCategory": "Financial Calculator",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "inLanguage": "en-US",
+    "isPartOf": {
+      "@type": "WebSite",
+      "@id": `${site.url}/#website`
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "SDE (Seller's Discretionary Earnings) calculation",
+      "Revenue multiple valuation",
+      "Business health analysis with 6 key metrics",
+      "Industry benchmark comparisons by concept type",
+      "Downloadable PDF valuation report",
+      "Real-time valuation estimates"
+    ],
+    "provider": {
+      "@type": "Organization",
+      "@id": `${site.url}/#organization`
+    },
+    "author": {
+      "@type": "Person",
+      "@id": `${site.url}/#${site.business.founder.slug}`
+    },
+    "potentialAction": {
+      "@type": "UseAction",
+      "target": `${site.url}/resources/calculators/sde-calculator`,
+      "name": "Calculate Restaurant Value"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is SDE (Seller's Discretionary Earnings)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SDE is the most common valuation method for owner-operated restaurants with less than $1M in annual earnings. It calculates what a new owner-operator would earn by adding back the current owner's salary, benefits, and discretionary expenses to the net profit. The formula is: SDE = Net Profit + Owner's Salary + Owner Benefits + Depreciation + One-Time Expenses + Personal Expenses."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What SDE multiple is typical for restaurants?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Restaurant SDE multiples typically range from 1.0x to 4.0x depending on earnings tier. Under $75K SDE: 1.0x-2.0x. $75K-$150K: 1.5x-2.5x. $150K-$300K: 2.0x-3.0x. $300K-$500K: 2.25x-3.25x. $500K-$1M: 2.5x-3.5x. Over $1M: 3.0x-4.0x. Factors like lease terms, location, and financial trends affect where you fall in these ranges."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When should I use EBITDA instead of SDE?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use EBITDA instead of SDE when your restaurant has earnings above $500K-$1M, operates with professional management rather than an owner-operator, is part of a multi-unit group, or is being marketed to institutional buyers. EBITDA removes the owner salary component and is the standard for larger operations."
+        }
+      }
+    ]
+  }
+];
+---
+
+<Layout
+  seo_title={seoTitle}
+  seo_description={seoDescription}
+  seo_image="/images/marketing/financial-performance.webp"
+  url={`${site.url}/resources/calculators/sde-calculator`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(calculatorSchema)} slot="head"></script>
+
+  <PageTitle
+    title="Business Valuation Calculator"
+    sub_title="Calculate your restaurant's Seller's Discretionary Earnings (SDE) and estimated sale price. The standard valuation method for owner-operated restaurants."
+    image="/images/marketing/financial-performance.webp"
+    client:load
+  />
+
+  <section class="container max-w-7xl py-12 md:py-16">
+    <ValuationCalculator client:load />
+  </section>
+
+  <!-- Educational Content for SEO -->
+  <section class="bg-gray-50 border-t border-gray-200">
+    <div class="container max-w-7xl py-12 md:py-16">
+      <div class="max-w-3xl">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Understanding Business Valuation Using SDE</h2>
+
+        <div class="max-w-none">
+          <h3>What is SDE (Seller's Discretionary Earnings)?</h3>
+          <p>
+            SDE is the most common valuation method for owner-operated restaurants with less than $1M in annual earnings. It calculates what a new owner-operator would earn by adding back the current owner's salary, benefits, and discretionary expenses to the net profit. For a deeper dive into how SDE drives business value, read our guide to <a href="/blog/sellers-discretionary-earnings-and-business-valuations/">Seller's Discretionary Earnings and business valuations</a>.
+          </p>
+          <p>
+            <strong>SDE = Net Profit + Owner's Salary + Owner Benefits + Depreciation + One-Time Expenses + Personal Expenses</strong>
+          </p>
+
+          <h3>Why SDE Matters for Restaurant Sales</h3>
+          <p>
+            Most restaurant buyers are owner-operators who will work in the business. SDE shows them the total economic benefit they'll receive — including the salary they'll pay themselves. This makes SDE the standard for valuing restaurants where the owner is actively involved. The <a href="https://www.ibba.org/" rel="noopener noreferrer" target="_blank">International Business Brokers Association (IBBA)</a> recognizes SDE as the primary method for small business transactions.
+          </p>
+          <p>
+            Understanding your SDE is just one part of the equation. There are <a href="/blog/what-factors-determine-how-much-i-can-sell-my-business-for/">many factors that determine how much you can sell your business for</a>, from market conditions to buyer demand.
+          </p>
+
+          <h3>Typical SDE Multiples by Earnings Tier</h3>
+          <p>
+            Multiples vary by earnings level and are influenced by market data tracked by sources like the <a href="https://www.bizbuysell.com/insight-report/" rel="noopener noreferrer" target="_blank">BizBuySell Insight Report</a>. Here are the typical ranges:
+          </p>
+          <ul>
+            <li><strong>Under $75K SDE:</strong> 1.0x - 2.0x (smaller operations, higher risk)</li>
+            <li><strong>$75K - $150K SDE:</strong> 1.5x - 2.5x (solid small restaurants)</li>
+            <li><strong>$150K - $300K SDE:</strong> 2.0x - 3.0x (strong performers)</li>
+            <li><strong>$300K - $500K SDE:</strong> 2.25x - 3.25x (premium operations)</li>
+            <li><strong>$500K - $1M SDE:</strong> 2.5x - 3.5x (larger, more desirable)</li>
+            <li><strong>Over $1M SDE:</strong> 3.0x - 4.0x (consider EBITDA method)</li>
+          </ul>
+
+          <h3>What Affects Your Multiple?</h3>
+          <p>
+            Your <a href="/blog/the-critical-financial-performance-factor-when-selling-a-business-a-sellers-guide/">financial performance is the critical factor</a> in determining where you land within a given multiple range. Key drivers include:
+          </p>
+          <ul>
+            <li><strong>Lease Terms:</strong> 5+ years remaining with favorable rent (under 8% of sales) commands higher multiples. See our <a href="/blog/restaurant-leasing-guide/">restaurant leasing guide</a> for negotiation strategies.</li>
+            <li><strong>Prime Cost:</strong> COGS + Labor under 65% indicates efficient operations</li>
+            <li><strong>Location:</strong> High-traffic, visible locations with strong demographics</li>
+            <li><strong>Trends:</strong> Growing revenue and profit trends increase buyer confidence</li>
+            <li><strong>Owner Involvement:</strong> Semi-absentee operations are more valuable than owner-dependent ones</li>
+            <li><strong>Licenses:</strong> Type 47 liquor licenses add significant value in California. Explore our guide to <a href="/blog/bars-for-sale-california/">bars for sale in California</a> for more on license valuations.</li>
+          </ul>
+
+          <h3>When to Use EBITDA Instead</h3>
+          <p>
+            If your restaurant has SDE above $500K-$1M, or operates with professional management (not owner-operated), consider an <a href="/blog/understanding-ebitda-multiples-in-business-valuation/">EBITDA-based valuation</a>. EBITDA removes the owner salary component and is standard for larger operations, multi-unit groups, and institutional buyers. The <a href="https://www.sba.gov/" rel="noopener noreferrer" target="_blank">U.S. Small Business Administration</a> also provides resources for understanding how lenders evaluate these metrics during acquisition financing.
+          </p>
+          <p>
+            For a broader look at all the methods available, see our overview of <a href="/blog/fair-market-value-and-business-valuations-whats-your-business-really-worth/">fair market value and business valuations</a>.
+          </p>
+
+          <h3>Thinking About Selling Your Restaurant?</h3>
+          <p>
+            If you're exploring a sale, start with our <a href="/blog/top-tips-to-successfully-sell-a-restaurant/">top tips to successfully sell a restaurant</a> and our comprehensive guide to <a href="/blog/restaurants-for-sale/">restaurants for sale</a>. Whether you're in San Diego or anywhere in Southern California, our <a href="/blog/how-to-sell-your-business-california/">guide to selling your business in California</a> covers the full process from pricing to closing.
+          </p>
+
+          <h3>Get a Professional Broker Price Opinion</h3>
+          <p>
+            This calculator provides estimates based on industry standards, but actual valuations depend on many factors including market conditions, buyer demand, and deal structure. Our experienced brokers have sold hundreds of restaurants and can provide a complimentary, confidential <a href="/blog/fair-market-value-and-business-valuations-whats-your-business-really-worth/">broker price opinion</a>. Resources like <a href="https://www.score.org/" rel="noopener noreferrer" target="_blank">SCORE</a> also offer free mentoring to help you prepare your financials before a valuation.
+          </p>
+        </div>
+
+        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            Request Free Broker Price Opinion
+          </a>
+          <a
+            href="/services/sell-my-restaurant"
+            class="inline-flex items-center justify-center px-6 py-3 bg-white text-gray-900 font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+          >
+            Learn About Selling
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

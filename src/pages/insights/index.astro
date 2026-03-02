@@ -1,0 +1,92 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageTitle from '../../sections/PageTitle.tsx';
+import { getCollection } from 'astro:content';
+import { site } from '../../config/site';
+
+const allInsights = await getCollection('insights', ({ data }) => import.meta.env.PROD ? !data.draft : true);
+
+const insights = allInsights.sort((a, b) =>
+    new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+
+const categoryConfig: Record<string, { label: string; color: string }> = {
+    'market-spotlight': { label: 'Market Spotlight', color: 'bg-amber-100 text-amber-800' },
+    'market-report': { label: 'Market Report', color: 'bg-blue-100 text-blue-800' },
+    'news-analysis': { label: 'News Analysis', color: 'bg-green-100 text-green-800' },
+};
+
+const meta = {
+    title: "Market Insights",
+    sub_title: "Broker commentary on Southern California's Restaurant and Business Markets",
+    seo_title: "Market Insights — Southern California Restaurant & Business Analysis",
+    seo_description: "Timely market analysis, business profiles, and industry commentary from a Southern California business broker's perspective.",
+    seo_image: "/images/marketing/insights.webp",
+    url: `${site.url}/insights`,
+    featured_image: "/images/marketing/insights.webp",
+};
+---
+
+<Layout {...meta}>
+    <PageTitle title={meta.title} sub_title={meta.sub_title} image={meta.featured_image} />
+
+    <section class="container max-w-7xl py-12">
+        <!-- Category Legend -->
+        <div class="flex flex-wrap gap-3 mb-8">
+            {Object.entries(categoryConfig).map(([key, cat]) => (
+                <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${cat.color}`}>
+                    {cat.label}
+                </span>
+            ))}
+        </div>
+
+        {insights.length === 0 ? (
+            <p class="text-gray-500 text-center py-12">Insights coming soon.</p>
+        ) : (
+            <div class="insights-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {insights.map((post) => {
+                    const cat = categoryConfig[post.data.category];
+                    const slug = post.id.replace(/\.md$/, '');
+                    const formattedDate = new Date(post.data.pubDate).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                    });
+                    return (
+                        <div>
+                            <a href={`/insights/${slug}/`} class="block space-y-3">
+                                {post.data.featured_image && (
+                                    <img
+                                        src={post.data.featured_image}
+                                        alt={post.data.title}
+                                        class="w-full h-48 object-cover rounded-lg shadow-md"
+                                    />
+                                )}
+                                <div class="flex items-center gap-2">
+                                    <span class={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${cat.color}`}>
+                                        {cat.label}
+                                    </span>
+                                    {post.data.neighborhood && (
+                                        <span class="text-xs text-gray-400">{post.data.neighborhood}</span>
+                                    )}
+                                </div>
+                                <h2 class="text-xl hover:text-blue-700 transition-colors">
+                                    {post.data.title}
+                                </h2>
+                                <div class="flex items-center gap-2 text-xs text-gray-400">
+                                    <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
+                                    {post.data.read_time && (
+                                        <>
+                                            <span>·</span>
+                                            <span>{post.data.read_time} min read</span>
+                                        </>
+                                    )}
+                                </div>
+                            </a>
+                        </div>
+                    );
+                })}
+            </div>
+        )}
+    </section>
+</Layout>

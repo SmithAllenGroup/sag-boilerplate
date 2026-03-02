@@ -1,0 +1,317 @@
+---
+import ListingsPostLayout from '../../layouts/ListingsPostLayout.astro';
+import ListingRequestForm from '../../components/forms/ListingRequestForm.tsx';
+import { getCollection } from 'astro:content';
+import { formatCurrency } from '@/lib/api.ts';
+import { formatCuisine, getStatusConfig } from '@/utils/conceptMapping.ts';
+import { site } from '../../config/site';
+
+/** Build static paths from local content collection */
+export async function getStaticPaths() {
+    const allListings = await getCollection('listings');
+    // Sort by created_at desc for prev/next
+    const sorted = [...allListings].sort((a, b) => {
+        const dateA = a.data.created_at ? new Date(a.data.created_at).getTime() : 0;
+        const dateB = b.data.created_at ? new Date(b.data.created_at).getTime() : 0;
+        return dateB - dateA;
+    });
+
+    return sorted.map((listing, index) => {
+        const prev = sorted[index - 1];
+        const next = sorted[index + 1];
+        const slug = listing.id.replace(/\.md$/, '');
+
+        return {
+            params: { slug },
+            props: {
+                listing,
+                prevPost: prev ? { title: prev.data.title, slug: prev.id.replace(/\.md$/, '') } : null,
+                nextPost: next ? { title: next.data.title, slug: next.id.replace(/\.md$/, '') } : null,
+            },
+        };
+    });
+}
+
+const { listing, prevPost, nextPost } = Astro.props;
+const slug = listing.id.replace(/\.md$/, '');
+const { Content } = await listing.render();
+
+// Map content collection fields to template variables
+const {
+    title,
+    seo_title: listingSeoTitle,
+    seo_description: listingSeoDescription,
+    featured_image,
+    listing_price,
+    listing_price_extra,
+    sales,
+    sales_extra,
+    cash_flow,
+    cash_flow_extra,
+    seating,
+    seating_extra,
+    parking,
+    concept,
+    cuisine,
+    status,
+    type,
+    licenses,
+    hours,
+    employees,
+    established_year,
+    equipment_included,
+    reason_for_sale,
+    financing_available,
+    liquor_license,
+    outdoor_seating,
+    delivery_takeout,
+    franchise_available,
+    includes_real_estate,
+    live_entertainment,
+    blind,
+    is_published,
+    listing_flyer_url,
+    business_name,
+    agent_name,
+    office_name,
+    office_phone,
+    office_email,
+    city,
+    state,
+    county,
+    street_address,
+    square_footage,
+    lot_size,
+    year_built,
+    media,
+} = listing.data;
+
+// Determine form visibility and messaging
+const isComingSoon = status === 'coming_soon';
+const showForm = is_published || isComingSoon;
+
+// Build address display
+const address = !blind && street_address
+    ? [street_address, city, state].filter(Boolean).join(', ')
+    : null;
+
+// Organization name for non-blind listings
+const organizationName = business_name || null;
+
+// Total square footage
+const totalSquareFootage = square_footage || null;
+
+// Build related articles based on concept/cuisine
+const conceptList = Array.isArray(concept) ? concept.map(c => c.toLowerCase()) : [];
+const cuisineList = Array.isArray(cuisine) ? cuisine.map(c => c.toLowerCase()) : [];
+
+const relatedArticles: Array<{title: string; url: string; description: string}> = [];
+
+// Always include the operations guide
+relatedArticles.push({
+    title: 'Restaurant Operations Guide',
+    url: '/blog/restaurant-operations-guide/',
+    description: 'Food cost control, labor management, and the systems that drive profitability.',
+});
+
+// Concept-based articles
+if (conceptList.some(c => c.includes('bar') || c.includes('nightlife') || c.includes('lounge')) || liquor_license) {
+    relatedArticles.push({
+        title: 'Bars for Sale in California: Buying Guide',
+        url: '/blog/bars-for-sale-california/',
+        description: 'Liquor licenses, pour costs, and what to know before buying a bar.',
+    });
+}
+if (conceptList.some(c => c.includes('cafe') || c.includes('coffee') || c.includes('bakery'))) {
+    relatedArticles.push({
+        title: 'Cafes for Sale: Buying Guide',
+        url: '/blog/cafes-for-sale/',
+        description: 'Revenue mix, labor models, and equipment costs for cafe acquisitions.',
+    });
+}
+if (conceptList.some(c => c.includes('dining') || c.includes('restaurant')) || cuisineList.length > 0) {
+    relatedArticles.push({
+        title: 'Restaurants for Sale: Complete Buyer & Seller Guide',
+        url: '/blog/restaurants-for-sale/',
+        description: 'How to find, evaluate, and finance a restaurant acquisition.',
+    });
+}
+
+// Always include leasing guide and valuation
+relatedArticles.push({
+    title: 'Restaurant Leasing Guide',
+    url: '/blog/restaurant-leasing-guide/',
+    description: 'Negotiate your next lease — rent-to-sales ratios, CAM costs, and buildout terms.',
+});
+relatedArticles.push({
+    title: 'SDE Valuation Calculator',
+    url: '/resources/calculators/sde-calculator/',
+    description: 'Calculate what a business is worth based on seller\'s discretionary earnings.',
+});
+
+// Deduplicate and limit to 4
+const seen = new Set<string>();
+const uniqueArticles = relatedArticles.filter(a => {
+    if (seen.has(a.url)) return false;
+    seen.add(a.url);
+    return true;
+}).slice(0, 4);
+
+const meta = {
+    url: `${site.url}/listings/${slug}`,
+    seo_title: listingSeoTitle || title,
+    seo_description: listingSeoDescription || '',
+    seo_image: featured_image,
+};
+---
+
+<ListingsPostLayout
+        blind={blind}
+        title={title}
+        address={blind ? null : address}
+        county={county}
+        pubDate={listing.data.listing_date}
+        featured_image={featured_image}
+        prevPost={prevPost}
+        nextPost={nextPost}
+        seo_title={meta.seo_title}
+        seo_description={meta.seo_description}
+        seo_image={meta.seo_image}
+        asking_price={listing_price}
+        price_rider={listing_price_extra}
+        gross_revenue={sales}
+        cash_flow={cash_flow}
+        concept={concept}
+        cuisine={cuisine}
+        status={status}
+        size={totalSquareFootage ? `${totalSquareFootage.toLocaleString()} sq ft` : null}
+        seating={seating ? `${seating}${seating_extra ? ` ${seating_extra}` : ''}` : null}
+        base_rent={null}
+        lease_term={null}
+        state={state}
+        city={city}
+        includes_real_estate={includes_real_estate}
+        gallery={media}
+        hours={hours}
+        established_year={established_year}
+        business_name={business_name}
+>
+    <div class="flex flex-col sm:flex-row items-top justify-between sm:gap-8 pb-6">
+        <div class="flex items-center gap-4">
+            <h2 class="m-0">Investment Summary</h2>
+            <span class={getStatusConfig(status).classes}>
+                {getStatusConfig(status).label}
+            </span>
+        </div>
+        <div>
+            <h3><span class="font-semibold text-primary-600">Offered At:</span> {isComingSoon ? 'TBD' : formatCurrency(listing_price)} </h3>
+            {!isComingSoon && listing_price_extra && <p class="font-normal text-sm m-0 wrap-break-word">({listing_price_extra})</p>}
+        </div>
+    </div>
+
+    <div class="grid sm:grid-cols-5 gap-10">
+        <div id="listing" class="sm:col-span-3">
+            <div class="listings-content"><Content /></div>
+
+            <h3>Investment Specifications</h3>
+
+            <ul class="mt-4 space-y-1 [&_li]:mt-0">
+                {!blind && organizationName && <li><strong>Business Name:</strong> {organizationName}</li>}
+                {!blind && address && <li><strong>Address:</strong> {address}</li>}
+                {state && <li><strong>State:</strong> {state}</li>}
+                {county && <li><strong>County:</strong> {county}</li>}
+                {cuisine && Array.isArray(cuisine) && cuisine.length > 0 && <li><strong>Cuisine:</strong> {formatCuisine(cuisine)}</li>}
+                {sales && <li><strong>Annual Sales:</strong> {formatCurrency(sales)}{sales_extra && ` ${sales_extra}`}</li>}
+                {cash_flow !== null && cash_flow !== undefined && <li><strong>Cash Flow:</strong> {formatCurrency(cash_flow)}{cash_flow_extra && ` ${cash_flow_extra}`}</li>}
+                {licenses && <li><strong>Licenses:</strong> {licenses}</li>}
+                {totalSquareFootage && <li><strong>Space Size:</strong> {totalSquareFootage.toLocaleString()} sq ft</li>}
+                {includes_real_estate && lot_size && <li><strong>Lot Size:</strong> {lot_size.toLocaleString()} sq ft</li>}
+                {year_built && <li><strong>Year Built:</strong> {year_built}</li>}
+                {seating && <li><strong>Seating:</strong> {seating}{seating_extra && ` ${seating_extra}`}</li>}
+                {parking && Array.isArray(parking) && parking.length > 0 && <li><strong>Parking:</strong> {[...new Set(parking.map(p => p.replace(/ available$/i, '')))].join(', ')}</li>}
+                {hours && <li><strong>Hours:</strong> {hours}</li>}
+                {employees && <li><strong>Employees:</strong> {employees}</li>}
+                {established_year && <li><strong>Established:</strong> {established_year}</li>}
+                {equipment_included && <li><strong>Equipment Included:</strong> {equipment_included}</li>}
+                {reason_for_sale && <li><strong>Reason for Sale:</strong> {reason_for_sale}</li>}
+                {financing_available && <li><strong>Financing:</strong> Available</li>}
+                {liquor_license && <li><strong>Liquor License:</strong> Yes</li>}
+                {outdoor_seating && <li><strong>Outdoor Seating:</strong> Yes</li>}
+                {delivery_takeout && <li><strong>Delivery/Takeout:</strong> Yes</li>}
+                {franchise_available && <li><strong>Franchise Available:</strong> Yes</li>}
+                {includes_real_estate && <li><strong>Includes Real Estate:</strong> Yes</li>}
+                {live_entertainment && <li><strong>Live Entertainment:</strong> Yes</li>}
+            </ul>
+
+            {listing_flyer_url && (
+                    <div>
+                        <h3>Marketing Materials</h3>
+                        <div class="pt-2">
+                            <a href={listing_flyer_url} target="_blank">
+                                <div class="flex items-center gap-2">
+                                    <img src="/images/pdf_icon.svg" class="w-8" alt="Marketing Flyer">
+                                    <span class="font-medium">Marketing Flyer (PDF)</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+            )}
+
+            <div class="mt-10">
+                <h3>Related Resources</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                    {uniqueArticles.map(article => (
+                        <a href={article.url} class="block p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:shadow-sm transition-all hover:no-underline">
+                            <p class="font-semibold text-sm m-0 text-gray-900">{article.title}</p>
+                            <p class="text-xs text-gray-500 m-0 mt-1">{article.description}</p>
+                        </a>
+                    ))}
+                </div>
+            </div>
+        </div>
+
+        <div class="sm:col-span-2 mt-4">
+            {showForm ? (
+                <>
+                    {isComingSoon && (
+                        <div class="mb-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                            <p class="text-purple-800 text-sm font-medium m-0">
+                                This listing is coming soon and not yet available. Submit your information below to be notified when it becomes available.
+                            </p>
+                        </div>
+                    )}
+                    <ListingRequestForm
+                            listing-title={title}
+                            listing-slug={slug}
+                            asking-price={listing_price != null ? String(listing_price) : ''}
+                            client:load
+                    />
+                </>
+            ) : (
+                <div class="p-6 bg-gray-50 border border-gray-200 rounded-lg text-center">
+                    <p class="text-gray-700 font-medium m-0">This Listing Is No Longer Available</p>
+                    <p class="text-gray-600 text-sm mb-4 m-0">Please browse our other listings to find your next opportunity.</p>
+                    <a href="/listings" class="inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors">
+                        View All Listings
+                    </a>
+                </div>
+            )}
+        </div>
+    </div>
+
+    {(prevPost || nextPost) && (
+            <nav class="mt-16 border-t border-gray-300 pt-6 flex justify-between text-sm text-gray-500">
+                {prevPost ? (
+                        <a href={`/listings/${prevPost.slug}`} class="hover:text-gray-800">
+                            ← {prevPost.title}
+                        </a>
+                ) : <span />}
+
+                {nextPost ? (
+                        <a href={`/listings/${nextPost.slug}`} class="hover:text-gray-800">
+                            {nextPost.title} →
+                        </a>
+                ) : <span />}
+            </nav>
+    )}
+</ListingsPostLayout>

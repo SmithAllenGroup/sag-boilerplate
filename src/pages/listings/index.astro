@@ -1,0 +1,75 @@
+<!-- TODO: Replace brand copy -->
+---
+import Layout from '../../layouts/Layout.astro';
+import ListingsIndexPageTitle from '../../sections/ListingsIndexPageTitle.tsx';
+import { getCollection } from 'astro:content';
+import { formatCurrency } from '../../lib/api';
+import { formatCuisine, getStatusConfig } from '../../utils/conceptMapping';
+import { site } from '../../config/site';
+
+const allListings = await getCollection('listings');
+
+// Sort: active listings first, then by created_at desc
+const listings = allListings.sort((a, b) => {
+    if (a.data.status === 'off_market' && b.data.status !== 'off_market') return 1;
+    if (a.data.status !== 'off_market' && b.data.status === 'off_market') return -1;
+    const dateA = a.data.created_at ? new Date(a.data.created_at).getTime() : 0;
+    const dateB = b.data.created_at ? new Date(b.data.created_at).getTime() : 0;
+    return dateB - dateA;
+});
+
+const meta = {
+    title: "Business and Real Estate Listings",
+    sub_title: "",
+    url: `${site.url}/listings`,
+    image: "/images/listings/retail-location-valuation.webp",
+    seo_title: "Businesses and Commercial Real Estate for Sale",
+    seo_description: "Browse businesses and commercial real estate for sale. Smith Allen Group offers restaurants, retail, and franchise opportunities with expert guidance.",
+    seo_image: "/images/listings/retail-location-valuation.webp",
+};
+
+---
+
+<Layout {...meta}>
+    <ListingsIndexPageTitle title={meta.title} image={meta.image} />
+    <section class="container max-w-7xl py-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {listings.map((listing) => {
+            const statusConfig = getStatusConfig(listing.data.status);
+            const cuisines = Array.isArray(listing.data.cuisine) ? listing.data.cuisine : [];
+            const isComingSoon = listing.data.status === 'coming_soon';
+            const slug = listing.id.replace(/\.md$/, '');
+            return (
+                    <a href={`/listings/${slug}/`}
+                       class="relative flex flex-col bg-white rounded shadow p-4 hover:shadow-lg transition-all hover:no-underline overflow-hidden">
+                        {listing.data.includes_real_estate && (
+                            <div class="absolute top-[31px] -right-9 z-10 rotate-45 bg-emerald-600 text-white text-xs font-semibold py-1 px-12 shadow-md">
+                                Real Estate
+                            </div>
+                        )}
+                        {listing.data.featured_image && (
+                                <img
+                                        src={listing.data.featured_image}
+                                        alt={listing.data.title}
+                                        class="w-full h-48 object-cover rounded mb-4"
+                                />
+                        )}
+                        <div class="flex-grow">
+                            <h2 class="line-clamp-2">{listing.data.title}</h2>
+                            {cuisines.length > 0 && <p class="text-sm text-gray-500">Cuisine: {formatCuisine(cuisines)}</p>}
+                            {listing.data.seo_description && <div class="text-gray-700 line-clamp-3 pt-3">{listing.data.seo_description}</div>}
+                        </div>
+                        <div class="mt-6 flex items-center justify-between">
+                            <p class="font-semibold m-0">
+                                {isComingSoon ? 'TBD' : (listing.data.listing_price ? formatCurrency(listing.data.listing_price) : '')}
+                            </p>
+                            <span class={statusConfig.classes}>
+                            {statusConfig.label}
+                        </span>
+                        </div>
+                    </a>
+            );
+        })}
+    </div>
+    </section>
+</Layout>

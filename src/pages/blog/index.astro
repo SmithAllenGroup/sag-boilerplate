@@ -1,0 +1,84 @@
+<!-- TODO: Replace brand copy -->
+---
+import Layout from '../../layouts/Layout.astro';
+import PageTitle from '../../sections/PageTitle.tsx';
+import { getCollection } from 'astro:content';
+import { site } from '../../config/site';
+
+const allPosts = await getCollection('blog', ({ data }) => import.meta.env.PROD ? !data.draft : true);
+
+// Priority order for posts with the same pubDate (lower index = higher priority)
+const postPriority = [
+    'restaurants-for-sale',
+    'businesses-for-sale-san-diego',
+    'bars-for-sale-california',
+    'cafes-for-sale',
+    'liquor-stores-for-sale',
+    'how-to-sell-your-business-california',
+    'business-broker-san-diego',
+    'sellers-discretionary-earnings-and-business-valuations',
+    'what-factors-determine-how-much-i-can-sell-my-business-for',
+    'fair-market-value-and-business-valuations-whats-your-business-really-worth',
+    'understanding-ebitda-multiples-in-business-valuation',
+    'understanding-times-revenue-method-for-business-valuations',
+    'restaurant-operations-guide',
+    'restaurant-leasing-guide',
+    'top-tips-to-successfully-sell-a-restaurant',
+    'top-reasons-to-sell-your-business-why-sell-and-how-to-prepare',
+    'the-critical-financial-performance-factor-when-selling-a-business-a-sellers-guide',
+    'selling-a-business-to-retire-maximizing-your-exit-strategy',
+    'selling-a-business-due-to-burnout-surviving-the-grind-before-it-hits',
+    'how-to-sell-a-business-after-losing-passion-when-the-fire-fades',
+    'how-to-protect-your-business-in-a-divorce',
+    'small-business-attorneys-a-must-when-buying-or-selling-a-business',
+    'finding-the-best-cpa-for-small-business-a-guide-to-accounting-success',
+    'business-loans-capital-sources-for-small-businesses',
+    'franchising-how-does-it-work-and-what-you-need-to-know',
+    'a-guide-to-san-diego-commercial-real-estate-investing',
+];
+
+// Sort by pubDate descending, then by priority order as tiebreaker
+const posts = allPosts.sort((a, b) => {
+    const dateDiff = new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime();
+    if (dateDiff !== 0) return dateDiff;
+    const aSlug = a.id.replace(/\.md$/, '');
+    const bSlug = b.id.replace(/\.md$/, '');
+    const aIdx = postPriority.indexOf(aSlug);
+    const bIdx = postPriority.indexOf(bSlug);
+    return (aIdx === -1 ? 999 : aIdx) - (bIdx === -1 ? 999 : bIdx);
+});
+
+const meta = {
+    title: "Smith Allen Blog",
+    sub_title: "",
+    seo_title: "Smith Allen Group Blog",
+    seo_description: "Smith Allen Group thoughts on all things related to buying and selling restaurants, and a few things that aren't",
+    seo_image: "/images/marketing/about-us.webp",
+    url: `${site.url}/blog`,
+    featured_image: "/images/marketing/about-us.webp",
+};
+---
+
+<Layout {...meta}>
+    <PageTitle title={meta.title} sub_title={meta.sub_title} image={meta.featured_image} />
+    <section class="container max-w-7xl py-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 blog">
+            {posts.map((post) => (
+                    <div>
+                        <a href={`/blog/${post.id.replace(/\.md$/, '')}/`} class="block space-y-2">
+                            {post.data.featured_image && (
+                                    <img
+                                            src={post.data.featured_image}
+                                            alt={post.data.title}
+                                            class="w-full h-56 object-cover rounded-lg shadow-md"
+                                    />
+                            )}
+                            <h2 class="text-lg font-semibold leading-tight">
+                                {post.data.title}
+                            </h2>
+                        </a>
+                    </div>
+            ))}
+        </div>
+    </section>
+</Layout>

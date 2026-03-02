@@ -1,0 +1,386 @@
+---
+import "../styles/global.css";
+import { PrimaryNavigation } from  "../components/PrimaryNavigation";
+import Footer from '../sections/Footer.tsx';
+import { site, sameAs } from '../config/site';
+
+interface Props {
+    title?: string;
+    seo_title?: string;
+    seo_description?: string;
+    seo_image?: string;
+    url?: string;
+    pubDate?: Date; // for articles
+    author?: string;  // for articles
+    sub_title?: string;
+    isArticle?: boolean; // for blog schema
+    isListing?: boolean; // for listing schema
+    listingData?: any; // listing data for schema
+    wordCount?: number; // for blog schema
+    tags?: string[]; // for blog schema
+    faqs?: Array<{question: string; answer: string}>; // for FAQPage schema
+}
+
+const {
+    title = site.seo.defaultTitle,
+    seo_title = site.seo.defaultTitle,
+    seo_description = site.seo.defaultDescription,
+    seo_image = site.seo.defaultImage,
+    url = site.url,
+    pubDate,
+    author,
+    isArticle = false,
+    isListing = false,
+    listingData,
+    wordCount,
+    tags,
+    faqs,
+} = Astro.props;
+
+// Fix timezone rollback: date-only strings parsed as UTC midnight display as previous day in local tz
+const safePubDate = pubDate
+    ? (typeof pubDate === 'string' && !pubDate.includes('T')
+        ? new Date(pubDate + 'T12:00:00')
+        : new Date(pubDate))
+    : undefined;
+
+// Generate BreadcrumbList from URL path
+const urlPath = new URL(url, site.url).pathname;
+const pathSegments = urlPath.split("/").filter(Boolean);
+const breadcrumbItems = pathSegments.length > 0 ? pathSegments.map((segment, i) => {
+    const path = "/" + pathSegments.slice(0, i + 1).join("/");
+    const isLast = i === pathSegments.length - 1;
+    const name = isLast && isArticle && title ? title : segment.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+    return {
+        "@type": "ListItem",
+        "position": i + 2,
+        "name": name,
+        "item": `${site.url}${path}`
+    };
+}) : [];
+---
+<!doctype html>
+<html lang="en">
+<head>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+	<meta name="generator" content={Astro.generator} />
+	<link rel="icon" type="image/svg+xml" href={site.brand.favicon} />
+	<link rel="sitemap" href="/sitemap-index.xml" />
+	<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
+
+	<!-- Primary Meta Tags -->
+	<title>{title} | {site.seo.titleSuffix}</title>
+	<meta name="description" content={seo_description} />
+
+	<!-- Open Graph (Facebook) Meta Tags -->
+	<meta property="og:type" content={pubDate ? "article" : "website"} />
+	<meta property="og:title" content={seo_title} />
+	<meta property="og:description" content={seo_description} />
+	<meta property="og:image" content={seo_image} />
+	<meta property="og:url" content={url} />
+	<meta property="og:site_name" content={site.name} />
+	{pubDate && <meta property="article:published_time" content={safePubDate?.toISOString()} />}
+	{author && <meta name="author" content={author} />}
+
+	<!-- Twitter Card Meta Tags -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={seo_title} />
+	<meta name="twitter:description" content={seo_description} />
+	<meta name="twitter:image" content={seo_image} />
+	<meta name="twitter:url" content={url} />
+	<meta name="twitter:site" content={site.url} />
+
+	<!-- Google Analytics -->
+	<script async src={`https://www.googletagmanager.com/gtag/js?id=${site.analytics.gaId}`}></script>
+	<script is:inline define:vars={{ gaId: site.analytics.gaId }}>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', gaId);
+	</script>
+
+    <!-- JSON-LD Schema Markup -->
+    <script type="application/ld+json" set:html={JSON.stringify([
+        {
+            "@context": "https://schema.org",
+            "@type": site.business.type,
+            "@id": `${site.url}/#business`,
+            "name": site.name,
+            "description": site.description,
+            "url": site.url,
+            "logo": `${site.url}${site.brand.logoPng}`,
+            "image": `${site.url}${site.seo.defaultImage}`,
+            "telephone": site.contact.phoneFormatted,
+            "email": site.contact.email,
+            "priceRange": site.business.priceRange,
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": site.contact.address.street,
+                "addressLocality": site.contact.address.city,
+                "addressRegion": site.contact.address.state,
+                "postalCode": site.contact.address.zip,
+                "addressCountry": site.contact.address.country
+            },
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": site.geo.latitude,
+                "longitude": site.geo.longitude
+            },
+            "openingHoursSpecification": [
+                {
+                    "@type": "OpeningHoursSpecification",
+                    "dayOfWeek": site.business.openingHours.days,
+                    "opens": site.business.openingHours.opens,
+                    "closes": site.business.openingHours.closes
+                }
+            ],
+            "areaServed": site.business.areaServed.map(area => ({
+                "@type": area.type,
+                "name": area.name,
+                ...("region" in area ? { "addressRegion": area.region } : {})
+            })),
+            "serviceType": site.business.serviceTypes,
+            "sameAs": [site.social.linkedin, site.social.facebook],
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": site.business.rating.value,
+                "reviewCount": site.business.rating.count,
+                "bestRating": site.business.rating.best,
+                "worstRating": site.business.rating.worst
+            }
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "@id": `${site.url}/#organization`,
+            "name": site.name,
+            "alternateName": site.alternateName,
+            "description": `Leading business brokerage firm specializing in food & beverage establishments throughout Southern California.`,
+            "url": site.url,
+            "logo": {
+                "@type": "ImageObject",
+                "url": `${site.url}${site.brand.logoPng}`,
+                "width": site.brand.logoWidth,
+                "height": site.brand.logoHeight
+            },
+            "foundingDate": site.business.foundingDate,
+            "founder": {
+                "@type": "Person",
+                "@id": `${site.url}/#${site.business.founder.slug}`,
+                "name": site.business.founder.name
+            },
+            "numberOfEmployees": site.business.employees,
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": site.contact.address.street,
+                "addressLocality": site.contact.address.city,
+                "addressRegion": site.contact.address.state,
+                "postalCode": site.contact.address.zip,
+                "addressCountry": site.contact.address.country
+            },
+            "contactPoint": [
+                {
+                    "@type": "ContactPoint",
+                    "telephone": site.contact.phoneFormatted,
+                    "contactType": "customer service",
+                    "areaServed": site.contact.address.state,
+                    "availableLanguage": "English"
+                },
+                {
+                    "@type": "ContactPoint",
+                    "email": site.contact.email,
+                    "contactType": "sales",
+                    "areaServed": site.contact.address.state
+                }
+            ],
+            "sameAs": sameAs
+        },
+        ...(isArticle && pubDate && author ? [{
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "@id": `${url}#article`,
+            "headline": seo_title,
+            "name": title,
+            "description": seo_description,
+            "url": url,
+            "image": {
+                "@type": "ImageObject",
+                "url": seo_image,
+                "width": "1200",
+                "height": "630"
+            },
+            "datePublished": safePubDate?.toISOString(),
+            "dateModified": safePubDate?.toISOString(),
+            "author": {
+                "@type": "Person",
+                "@id": `${site.url}/#${site.business.founder.slug}`,
+                "name": author,
+                "url": `${site.url}/about/${site.business.founder.slug}`
+            },
+            "publisher": {
+                "@type": "Organization",
+                "@id": `${site.url}/#organization`,
+                "name": site.name,
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": `${site.url}/images/logo_black.png`,
+                    "width": site.brand.logoSchemaWidth,
+                    "height": site.brand.logoSchemaHeight
+                }
+            },
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": url
+            },
+            "articleSection": site.business.articleSections,
+            "keywords": tags?.length ? tags.join(", ") : site.business.defaultKeywords,
+            "wordCount": wordCount || 800,
+            "inLanguage": "en-US"
+        }] : []),
+        ...(breadcrumbItems.length > 0 ? [{
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": site.url
+                },
+                ...breadcrumbItems
+            ]
+        }] : []),
+        ...(faqs?.length ? [{
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faqs.map(faq => ({
+                "@type": "Question",
+                "name": faq.question,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": faq.answer
+                }
+            }))
+        }] : []),
+        ...(isListing && listingData ? [
+            // Use RealEstateListing for properties with real estate, FoodEstablishment for business-only
+            listingData.includes_real_estate ? {
+                "@context": "https://schema.org",
+                "@type": "RealEstateListing",
+                "@id": `${url}#listing`,
+                "name": title,
+                "description": seo_description,
+                "url": url,
+                "image": seo_image,
+                "datePosted": listingData.pubDate ? new Date(listingData.pubDate).toISOString() : new Date().toISOString(),
+                "price": listingData.asking_price || 0,
+                "priceCurrency": "USD",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": listingData.address || '',
+                    "addressLocality": listingData.county || '',
+                    "addressRegion": listingData.state || 'CA',
+                    "addressCountry": "US"
+                },
+                ...(listingData.size ? { "floorSize": { "@type": "QuantitativeValue", "value": listingData.size } } : {}),
+                "broker": {
+                    "@type": "RealEstateAgent",
+                    "@id": `${site.url}/#organization`,
+                    "name": site.name,
+                    "url": site.url,
+                    "telephone": site.contact.phoneFormatted
+                },
+                "additionalProperty": [
+                    ...(listingData.gross_revenue ? [{
+                        "@type": "PropertyValue",
+                        "name": "Annual Revenue",
+                        "value": listingData.gross_revenue
+                    }] : []),
+                    ...(listingData.cash_flow ? [{
+                        "@type": "PropertyValue",
+                        "name": "Cash Flow",
+                        "value": listingData.cash_flow
+                    }] : []),
+                    ...(listingData.concept ? [{
+                        "@type": "PropertyValue",
+                        "name": "Business Type",
+                        "value": listingData.concept
+                    }] : []),
+                    ...(listingData.seating ? [{
+                        "@type": "PropertyValue",
+                        "name": "Seating Capacity",
+                        "value": listingData.seating
+                    }] : [])
+                ]
+            } : {
+                "@context": "https://schema.org",
+                "@type": "FoodEstablishment",
+                "@id": `${url}#business`,
+                "name": listingData.blind ? title : (listingData.business_name || title),
+                "description": seo_description,
+                "url": url,
+                "image": seo_image,
+                "address": {
+                    "@type": "PostalAddress",
+                    ...(listingData.blind ? {} : { "streetAddress": listingData.address || '' }),
+                    "addressLocality": listingData.city || listingData.county || '',
+                    "addressRegion": listingData.state || 'CA',
+                    "addressCountry": "US"
+                },
+                "servesCuisine": Array.isArray(listingData.cuisine) && listingData.cuisine.length > 0
+                    ? listingData.cuisine.join(', ')
+                    : (Array.isArray(listingData.concept) ? listingData.concept.join(', ') : 'Restaurant'),
+                ...(listingData.seating ? { "seatingCapacity": listingData.seating } : {}),
+                ...(listingData.hours ? { "openingHours": listingData.hours } : {}),
+                ...(listingData.established_year ? { "foundingDate": String(listingData.established_year) } : {}),
+                "broker": {
+                    "@type": "RealEstateAgent",
+                    "@id": `${site.url}/#organization`,
+                    "name": site.name,
+                    "url": site.url,
+                    "telephone": site.contact.phoneFormatted
+                },
+                "additionalProperty": [
+                    ...(listingData.asking_price ? [{
+                        "@type": "PropertyValue",
+                        "name": "Asking Price",
+                        "value": listingData.asking_price,
+                        "unitCode": "USD"
+                    }] : []),
+                    ...(listingData.gross_revenue ? [{
+                        "@type": "PropertyValue",
+                        "name": "Annual Revenue",
+                        "value": listingData.gross_revenue
+                    }] : []),
+                    ...(listingData.cash_flow ? [{
+                        "@type": "PropertyValue",
+                        "name": "Cash Flow",
+                        "value": listingData.cash_flow
+                    }] : []),
+                    ...(listingData.size ? [{
+                        "@type": "PropertyValue",
+                        "name": "Size",
+                        "value": listingData.size
+                    }] : [])
+                ]
+            }
+        ] : [])
+    ])}></script>
+
+	<slot name="head" />
+</head>
+
+<body>
+<div class="bg-white">
+	<PrimaryNavigation client:load />
+	<main>
+		<slot />
+	</main>
+    <Footer className="z-10" client:load />
+</div>
+</body>
+</html>

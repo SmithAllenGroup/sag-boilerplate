@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BlogPostTitle from '../sections/BlogPostTitle.tsx';
+import { site } from '../config/site';
+
+const {
+    title,
+    seo_title,
+    seo_description,
+    seo_image,
+    author,
+    pubDate,
+    image,
+    sub_title = '',
+    url = `${site.url}${Astro.url.pathname}`,
+    wordCount,
+    tags,
+    faqs,
+} = Astro.props;
+
+const meta = {
+    title,
+    seo_title,
+    seo_description,
+    sub_title,
+    image,
+    seo_image,
+    url,
+    pubDate,
+    author,
+    isArticle: true,
+    wordCount,
+    tags,
+    faqs,
+};
+---
+
+<Layout {...meta}>
+    <BlogPostTitle
+            title={title}
+            author={author}
+            pubDate={pubDate}
+            image={image}
+    />
+
+    <article class="max-w-5xl mx-auto py-12 px-6 sm:px-12">
+        <slot />
+    </article>
+</Layout>
+
